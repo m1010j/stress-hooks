@@ -113,7 +113,7 @@ withMemo: ${withMemo},
 
     return (
       <>
-        <h1>Stress Testing Hooks</h1>
+        <h1>Stress Testing React Hooks</h1>
         <form>
           <label>
             n:
