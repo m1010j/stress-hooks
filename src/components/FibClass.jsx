@@ -3,8 +3,14 @@ import React from 'react';
 class FibClass extends React.Component {
   constructor(props) {
     super(props);
-    const { benchmark, values } = this.props;
-    this.state = { result: benchmark(...values) };
+    const { benchmark, values, catchRuntimeError } = this.props;
+    let result;
+    try {
+      result = benchmark(...values);
+    } catch (error) {
+      catchRuntimeError(error.message);
+    }
+    this.state = { result: result };
   }
 
   render() {

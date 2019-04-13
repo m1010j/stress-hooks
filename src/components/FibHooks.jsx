@@ -1,10 +1,15 @@
 import React, { useState, useMemo } from 'react';
 
 function FibHooks(props) {
-  const { benchmark, values } = props;
-  const calculatedResult = props.withMemo
-    ? useMemo(() => benchmark(...values), props.n)
-    : benchmark(...values);
+  const { benchmark, values, catchRuntimeError } = props;
+  let calculatedResult;
+  try {
+    calculatedResult = props.withMemo
+      ? useMemo(() => benchmark(...values), props.n)
+      : benchmark(...values);
+  } catch (error) {
+    catchRuntimeError(error.message);
+  }
   const [result] = useState(calculatedResult);
 
   return (

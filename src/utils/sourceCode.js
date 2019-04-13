@@ -4,7 +4,7 @@ import React from 'react';
 class FibClass extends React.Component {
   constructor(props) {
     super(props);
-    const { benchmark, values } = this.props;
+    const { benchmark, values } = props;
     this.state = { result: benchmark(...values) };
   }
 

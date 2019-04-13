@@ -35,7 +35,6 @@ const clearedTimes = { startTime: null, endTime: null };
 let defaultBenchmarkFunction;
 eval(`defaultBenchmarkFunction = ${defaultBenchmark}`);
 /* eslint-enable no-eval */
-console.log({ defaultBenchmarkFunction });
 
 class App extends React.Component {
   constructor(props) {
@@ -51,8 +50,17 @@ class App extends React.Component {
       totalRenders: 10,
       benchmarkBody: defaultBenchmark,
       syntaxError: null,
+      runtimeError: null,
     };
   }
+
+  catchRuntimeError = errorMessage => {
+    this.setState({
+      runtimeError: errorMessage,
+      runBenchmark: false,
+      ...clearedTimes,
+    });
+  };
 
   handleChangeBenchmark = e => {
     this.setState({ benchmarkBody: e.currentTarget.value });
@@ -127,6 +135,7 @@ class App extends React.Component {
       benchmark,
       syntaxError,
       values,
+      runtimeError,
     } = this.state;
 
     const componentDescription = this.isHooksComponent()
@@ -137,28 +146,33 @@ class App extends React.Component {
 
     const propsString = `
 props = {
-benchmark: ${benchmark.toString()},
-values: [${values.join(' ')}],
-withMemo: ${withMemo},
+  benchmark: ${benchmark && benchmark.toString().slice(0, 20)}...},
+  catchRuntimeError: errorMessage => {...},
+  values: [${values.join(' ')}],
+  withMemo: ${withMemo},
 }
       `;
 
     const argumentInputs = [];
-    for (let idx = 0; idx < benchmark.length; idx++) {
-      argumentInputs.push(
-        <label key={idx}>
-          Argument {idx}:{' '}
-          <input
-            name={`argument ${idx}`}
-            type="text"
-            value={values[idx]}
-            onChange={this.handleChangeArgument(idx)}
-            disabled={syntaxError}
-          />
-          <br />
-        </label>
-      );
+    if (benchmark) {
+      for (let idx = 0; idx < benchmark.length; idx++) {
+        argumentInputs.push(
+          <label key={idx}>
+            Argument {idx}:{' '}
+            <input
+              name={`argument ${idx}`}
+              type="text"
+              value={values[idx]}
+              onChange={this.handleChangeArgument(idx)}
+              disabled={syntaxError}
+            />
+            <br />
+          </label>
+        );
+      }
     }
+
+    console.log({ runtimeError });
 
     return (
       <>
@@ -175,7 +189,8 @@ withMemo: ${withMemo},
               onChange={this.handleChangeBenchmark}
             />
           </label>
-          {Boolean(syntaxError) && <p>Error: {syntaxError}</p>}
+          {Boolean(syntaxError) && <p>Syntax error: {syntaxError}</p>}
+          {Boolean(runtimeError) && <p>Runtime error: {runtimeError}</p>}
           <br />
           {argumentInputs}
           <label>
@@ -249,11 +264,12 @@ withMemo: ${withMemo},
             totalRenders={totalRenders}
             withMemo={withMemo}
             stopBenchmark={this.stopBenchmark}
+            catchRuntimeError={this.catchRuntimeError}
           />
         )}
         {!runBenchmark && Boolean(startTime) && Boolean(stopTime) && (
           <p>
-            Calculating the function {totalRenders} many times took the{' '}
+            Calculating the function {totalRenders} times took the{' '}
             {componentDescription} {stopTime.getTime() - startTime.getTime()}{' '}
             milliseconds.
           </p>

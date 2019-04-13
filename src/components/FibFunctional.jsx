@@ -1,8 +1,13 @@
 import React from 'react';
 
 function FibFunctional(props) {
-  const { benchmark, values } = this.props;
-  const result = benchmark(...values);
+  const { benchmark, values, catchRuntimeError } = props;
+  let result;
+  try {
+    result = benchmark(...values);
+  } catch (error) {
+    catchRuntimeError(error.message);
+  }
 
   return (
     <>
