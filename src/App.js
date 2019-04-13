@@ -123,36 +123,37 @@ class App extends React.Component {
     return this.isComponent('hooks');
   };
 
-  render() {
-    const {
-      component,
-      runBenchmark,
-      withMemo,
-      startTime,
-      stopTime,
-      totalRenders,
-      benchmarkBody,
-      benchmark,
-      syntaxError,
-      values,
-      runtimeError,
-    } = this.state;
+  renderBenchmarkFunction = () => {
+    const { benchmarkBody } = this.state;
+    return (
+      <React.Fragment>
+        <h2>Benchmark function:</h2>
+        <label>
+          Function body:
+          <br />
+          <textarea
+            rows="12"
+            value={benchmarkBody}
+            onBlur={this.handleUpdateBenchmark}
+            onChange={this.handleChangeBenchmark}
+          />
+        </label>
+      </React.Fragment>
+    );
+  };
 
-    const componentDescription = this.isHooksComponent()
-      ? `${componentDescriptionMap[component]} ${
-          withMemo ? '' : 'without '
-        }using useMemo`
-      : componentDescriptionMap[component];
+  renderErrors = () => {
+    const { syntaxError, runtimeError } = this.state;
+    return (
+      <React.Fragment>
+        {Boolean(syntaxError) && <p>Syntax error: {syntaxError}</p>}
+        {Boolean(runtimeError) && <p>Runtime error: {runtimeError}</p>}
+      </React.Fragment>
+    );
+  };
 
-    const propsString = `
-props = {
-  benchmark: ${benchmark && benchmark.toString().slice(0, 20)}...},
-  catchRuntimeError: errorMessage => {...},
-  values: [${values.join(' ')}],
-  withMemo: ${withMemo},
-}
-      `;
-
+  renderArgumentInputs = () => {
+    const { benchmark, values, syntaxError } = this.state;
     const argumentInputs = [];
     if (benchmark) {
       for (let idx = 0; idx < benchmark.length; idx++) {
@@ -171,113 +172,172 @@ props = {
         );
       }
     }
+    return argumentInputs;
+  };
 
+  renderOptions = () => {
+    const { totalRenders, syntaxError, withMemo } = this.state;
+    return (
+      <React.Fragment>
+        <label>
+          Total number of renders:{' '}
+          <input
+            name="total number of renders"
+            type="number"
+            value={totalRenders}
+            onChange={this.handleChangeTotalRenders}
+            disabled={syntaxError}
+          />
+        </label>
+        <div className="radio">
+          <label>
+            <input
+              type="radio"
+              value="class"
+              checked={this.isClassComponent()}
+              onChange={this.handleChangeComponent('class')}
+              disabled={syntaxError}
+            />
+            {componentDescriptionMap.class}
+          </label>
+        </div>
+        <div className="radio">
+          <label>
+            <input
+              type="radio"
+              value="functional"
+              checked={this.isFunctionalComponent()}
+              onChange={this.handleChangeComponent('functional')}
+              disabled={syntaxError}
+            />
+            {componentDescriptionMap.functional}
+          </label>
+        </div>
+        <div className="radio">
+          <label>
+            <input
+              type="radio"
+              value="hooks"
+              checked={this.isHooksComponent()}
+              onChange={this.handleChangeComponent('hooks')}
+              disabled={syntaxError}
+            />
+            {componentDescriptionMap.hooks}
+          </label>
+        </div>
+        <label>
+          Use useMemo:
+          <input
+            name="withMemo"
+            type="checkbox"
+            checked={withMemo}
+            onChange={this.handleChangeWithMemo}
+            disabled={syntaxError || !this.isHooksComponent()}
+          />
+        </label>
+      </React.Fragment>
+    );
+  };
+
+  renderGoButton = () => {
+    const { syntaxError, component } = this.state;
+    return (
+      <button
+        onClick={this.handleClickRunBenchmark}
+        disabled={syntaxError || !component}
+      >
+        Go!
+      </button>
+    );
+  };
+
+  renderBenchmark = () => {
+    const {
+      runBenchmark,
+      component,
+      benchmark,
+      values,
+      totalRenders,
+      withMemo,
+    } = this.state;
+    return (
+      runBenchmark && (
+        <Benchmark
+          component={componentMap[component]}
+          benchmark={benchmark}
+          values={values}
+          totalRenders={totalRenders}
+          withMemo={withMemo}
+          stopBenchmark={this.stopBenchmark}
+          catchRuntimeError={this.catchRuntimeError}
+        />
+      )
+    );
+  };
+
+  renderResults = () => {
+    const {
+      runBenchmark,
+      startTime,
+      stopTime,
+      totalRenders,
+      component,
+      withMemo,
+    } = this.state;
+
+    const componentDescription = this.isHooksComponent()
+      ? `${componentDescriptionMap[component]} ${
+          withMemo ? '' : 'without '
+        }using useMemo`
+      : componentDescriptionMap[component];
+    return (
+      !runBenchmark &&
+      Boolean(startTime) &&
+      Boolean(stopTime) && (
+        <p>
+          Calculating the function {totalRenders} times took the{' '}
+          {componentDescription} {stopTime.getTime() - startTime.getTime()}{' '}
+          milliseconds.
+        </p>
+      )
+    );
+  };
+
+  renderBenchmarkInfo = () => {
+    const { component, benchmark, values, withMemo } = this.state;
+    const propsString = `
+props = {
+  benchmark: ${benchmark && benchmark.toString().slice(0, 20)}...},
+  catchRuntimeError: errorMessage => {...},
+  values: [${values.join(' ')}],
+  withMemo: ${withMemo},
+}
+      `;
+    return (
+      Boolean(component) && (
+        <React.Fragment>
+          <xmp>{componentCodeMap[component]}</xmp>
+          <xmp>{propsString}</xmp>
+        </React.Fragment>
+      )
+    );
+  };
+
+  render() {
     return (
       <>
         <h1>Stress Testing React Hooks</h1>
         <form>
-          <h2>Benchmark function:</h2>
-          <label>
-            Function body:
-            <br />
-            <textarea
-              rows="12"
-              value={benchmarkBody}
-              onBlur={this.handleUpdateBenchmark}
-              onChange={this.handleChangeBenchmark}
-            />
-          </label>
-          {Boolean(syntaxError) && <p>Syntax error: {syntaxError}</p>}
-          {Boolean(runtimeError) && <p>Runtime error: {runtimeError}</p>}
+          {this.renderBenchmarkFunction()}
+          {this.renderErrors()}
           <br />
-          {argumentInputs}
-          <label>
-            Total number of renders:{' '}
-            <input
-              name="total number of renders"
-              type="number"
-              value={totalRenders}
-              onChange={this.handleChangeTotalRenders}
-              disabled={syntaxError}
-            />
-          </label>
-          <div className="radio">
-            <label>
-              <input
-                type="radio"
-                value="class"
-                checked={this.isClassComponent()}
-                onChange={this.handleChangeComponent('class')}
-                disabled={syntaxError}
-              />
-              {componentDescriptionMap.class}
-            </label>
-          </div>
-          <div className="radio">
-            <label>
-              <input
-                type="radio"
-                value="functional"
-                checked={this.isFunctionalComponent()}
-                onChange={this.handleChangeComponent('functional')}
-                disabled={syntaxError}
-              />
-              {componentDescriptionMap.functional}
-            </label>
-          </div>
-          <div className="radio">
-            <label>
-              <input
-                type="radio"
-                value="hooks"
-                checked={this.isHooksComponent()}
-                onChange={this.handleChangeComponent('hooks')}
-                disabled={syntaxError}
-              />
-              {componentDescriptionMap.hooks}
-            </label>
-          </div>
-          <label>
-            Use useMemo:
-            <input
-              name="withMemo"
-              type="checkbox"
-              checked={withMemo}
-              onChange={this.handleChangeWithMemo}
-              disabled={syntaxError || !this.isHooksComponent()}
-            />
-          </label>
-          <button
-            onClick={this.handleClickRunBenchmark}
-            disabled={syntaxError || !component}
-          >
-            Go!
-          </button>
+          {this.renderArgumentInputs()}
+          {this.renderOptions()}
+          {this.renderGoButton()}
         </form>
-        {runBenchmark && (
-          <Benchmark
-            component={componentMap[component]}
-            benchmark={benchmark}
-            values={values}
-            totalRenders={totalRenders}
-            withMemo={withMemo}
-            stopBenchmark={this.stopBenchmark}
-            catchRuntimeError={this.catchRuntimeError}
-          />
-        )}
-        {!runBenchmark && Boolean(startTime) && Boolean(stopTime) && (
-          <p>
-            Calculating the function {totalRenders} times took the{' '}
-            {componentDescription} {stopTime.getTime() - startTime.getTime()}{' '}
-            milliseconds.
-          </p>
-        )}
-        {Boolean(component) && (
-          <>
-            <xmp>{componentCodeMap[component]}</xmp>
-            <xmp>{propsString}</xmp>
-          </>
-        )}
+        {this.renderBenchmark()}
+        {this.renderResults()}
+        {this.renderBenchmarkInfo()}
       </>
     );
   }
