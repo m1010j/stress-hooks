@@ -1,6 +1,6 @@
 import React from 'react';
 
-class FibClass extends React.Component {
+class ClassComponent extends React.Component {
   constructor(props) {
     super(props);
     const { benchmark, values, catchRuntimeError } = this.props;
@@ -34,4 +34,4 @@ class FibClass extends React.Component {
   }
 }
 
-export default FibClass;
+export default ClassComponent;

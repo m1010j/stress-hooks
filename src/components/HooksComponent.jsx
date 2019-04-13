@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 
-function FibHooks(props) {
+function HooksComponent(props) {
   const { benchmark, values, catchRuntimeError } = props;
   let calculatedResult;
   try {
@@ -31,4 +31,4 @@ function FibHooks(props) {
   );
 }
 
-export default FibHooks;
+export default HooksComponent;

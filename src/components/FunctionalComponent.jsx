@@ -1,6 +1,6 @@
 import React from 'react';
 
-function FibFunctional(props) {
+function FunctionalComponent(props) {
   const { benchmark, values, catchRuntimeError } = props;
   let result;
   try {
@@ -28,4 +28,4 @@ function FibFunctional(props) {
   );
 }
 
-export default FibFunctional;
+export default FunctionalComponent;

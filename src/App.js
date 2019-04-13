@@ -1,20 +1,20 @@
 import React from 'react';
 import Benchmark from './components/Benchmark';
-import FibClass from './components/FibClass';
-import FibFunctional from './components/FibFunctional';
-import FibHooks from './components/FibHooks';
+import ClassComponent from './components/ClassComponent';
+import FunctionalComponent from './components/FunctionalComponent';
+import HooksComponent from './components/HooksComponent';
 import {
-  fibClassCode,
-  fibFunctionalCode,
-  fibHooksCode,
+  classComponentCode,
+  functionalComponentCode,
+  hooksComponentCode,
 } from './utils/sourceCode';
 import defaultBenchmark from './utils/defaultBenchmark';
 import './App.css';
 
 const componentMap = {
-  class: FibClass,
-  functional: FibFunctional,
-  hooks: FibHooks,
+  class: ClassComponent,
+  functional: FunctionalComponent,
+  hooks: HooksComponent,
 };
 
 const componentDescriptionMap = {
@@ -24,9 +24,9 @@ const componentDescriptionMap = {
 };
 
 const componentCodeMap = {
-  class: fibClassCode,
-  functional: fibFunctionalCode,
-  hooks: fibHooksCode,
+  class: classComponentCode,
+  functional: functionalComponentCode,
+  hooks: hooksComponentCode,
 };
 
 const clearedTimes = { startTime: null, endTime: null };

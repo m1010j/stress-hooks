@@ -1,7 +1,7 @@
-export const fibClassCode = `
+export const classComponentCode = `
 import React from 'react';
 
-class FibClass extends React.Component {
+class ClassComponent extends React.Component {
   constructor(props) {
     super(props);
     const { benchmark, values } = props;
@@ -30,10 +30,10 @@ class FibClass extends React.Component {
 }
 `;
 
-export const fibFunctionalCode = `
+export const functionalComponentCode = `
 import React from 'react';
 
-function FibFunctional(props) {
+function FunctionalComponent(props) {
   const { benchmark, values } = this.props;
   const result = benchmark(...values);
 
@@ -57,10 +57,10 @@ function FibFunctional(props) {
 }
 `;
 
-export const fibHooksCode = `
+export const hooksComponentCode = `
 import React, { useState, useMemo } from 'react';
 
-function FibHooks(props) {
+function HooksComponent(props) {
   const { benchmark, values } = props;
   const calculatedResult = props.withMemo
     ? useMemo(() => benchmark(...values), props.n)
