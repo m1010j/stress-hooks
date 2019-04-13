@@ -8,6 +8,7 @@ import {
   fibFunctionalCode,
   fibHooksCode,
 } from './utils/sourceCode';
+import defaultBenchmark from './utils/defaultBenchmark';
 import './App.css';
 
 const componentMap = {
@@ -30,22 +31,49 @@ const componentCodeMap = {
 
 const clearedTimes = { startTime: null, endTime: null };
 
+/* eslint-disable no-eval */
+let defaultBenchmarkFunction;
+eval(`defaultBenchmarkFunction = ${defaultBenchmark}`);
+/* eslint-enable no-eval */
+console.log({ defaultBenchmarkFunction });
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      benchmark: defaultBenchmarkFunction,
       component: null,
       runBenchmark: false,
       withMemo: false,
-      n: 35,
+      values: [35],
       startTime: null,
       stopTime: null,
       totalRenders: 10,
+      benchmarkBody: defaultBenchmark,
+      syntaxError: null,
     };
   }
 
-  handleChangeN = e => {
-    this.setState({ n: e.currentTarget.value, ...clearedTimes });
+  handleChangeBenchmark = e => {
+    this.setState({ benchmarkBody: e.currentTarget.value });
+  };
+
+  handleUpdateBenchmark = () => {
+    try {
+      let benchmark;
+      /* eslint-disable no-eval */
+      eval(`benchmark = ${this.state.benchmarkBody}`);
+      /* eslint-enable no-eval */
+      this.setState({ benchmark });
+    } catch (error) {
+      this.setState({ syntaxError: error.message, benchmark: null });
+    }
+  };
+
+  handleChangeArgument = idx => e => {
+    const values = this.state.values.slice();
+    values.splice(idx, 1, e.currentTarget.value);
+    this.setState({ values, ...clearedTimes });
   };
 
   handleChangeTotalRenders = e => {
@@ -92,10 +120,13 @@ class App extends React.Component {
       component,
       runBenchmark,
       withMemo,
-      n,
       startTime,
       stopTime,
       totalRenders,
+      benchmarkBody,
+      benchmark,
+      syntaxError,
+      values,
     } = this.state;
 
     const componentDescription = this.isHooksComponent()
@@ -105,25 +136,49 @@ class App extends React.Component {
       : componentDescriptionMap[component];
 
     const propsString = `
-props: {
-n: ${n || 'undefined'},
+props = {
+benchmark: ${benchmark.toString()},
+values: [${values.join(' ')}],
 withMemo: ${withMemo},
 }
-`;
+      `;
+
+    const argumentIndices = Array.apply(null, { length: benchmark.length }).map(
+      Number.call,
+      Number
+    );
+    const argumentInputs = argumentIndices.map(idx => (
+      <label key={idx}>
+        Argument {idx} =
+        <input
+          name={`argument ${idx}`}
+          type="text"
+          value={values[idx]}
+          onChange={this.handleChangeArgument(idx)}
+          disabled={syntaxError}
+        />
+        <br />
+      </label>
+    ));
 
     return (
       <>
         <h1>Stress Testing React Hooks</h1>
         <form>
+          <h2>Benchmark function:</h2>
           <label>
-            n:
-            <input
-              name="n"
-              type="number"
-              value={n}
-              onChange={this.handleChangeN}
+            Function body:
+            <br />
+            <textarea
+              rows="12"
+              value={benchmarkBody}
+              onBlur={this.handleUpdateBenchmark}
+              onChange={this.handleChangeBenchmark}
             />
           </label>
+          {Boolean(syntaxError) && <p>Error: {syntaxError}</p>}
+          <br />
+          {argumentInputs}
           <label>
             Total number of renders:
             <input
@@ -131,6 +186,7 @@ withMemo: ${withMemo},
               type="number"
               value={totalRenders}
               onChange={this.handleChangeTotalRenders}
+              disabled={syntaxError}
             />
           </label>
           <div className="radio">
@@ -140,6 +196,7 @@ withMemo: ${withMemo},
                 value="class"
                 checked={this.isClassComponent()}
                 onChange={this.handleChangeComponent('class')}
+                disabled={syntaxError}
               />
               {componentDescriptionMap.class}
             </label>
@@ -151,6 +208,7 @@ withMemo: ${withMemo},
                 value="functional"
                 checked={this.isFunctionalComponent()}
                 onChange={this.handleChangeComponent('functional')}
+                disabled={syntaxError}
               />
               {componentDescriptionMap.functional}
             </label>
@@ -162,6 +220,7 @@ withMemo: ${withMemo},
                 value="hooks"
                 checked={this.isHooksComponent()}
                 onChange={this.handleChangeComponent('hooks')}
+                disabled={syntaxError}
               />
               {componentDescriptionMap.hooks}
             </label>
@@ -173,17 +232,21 @@ withMemo: ${withMemo},
               type="checkbox"
               checked={withMemo}
               onChange={this.handleChangeWithMemo}
-              disabled={!this.isHooksComponent()}
+              disabled={syntaxError || !this.isHooksComponent()}
             />
           </label>
-          <button onClick={this.handleClickRunBenchmark} disabled={!component}>
+          <button
+            onClick={this.handleClickRunBenchmark}
+            disabled={syntaxError || !component}
+          >
             Go!
           </button>
         </form>
         {runBenchmark && (
           <Benchmark
             component={componentMap[component]}
-            n={n}
+            benchmark={benchmark}
+            values={values}
             totalRenders={totalRenders}
             withMemo={withMemo}
             stopBenchmark={this.stopBenchmark}
@@ -191,9 +254,9 @@ withMemo: ${withMemo},
         )}
         {!runBenchmark && Boolean(startTime) && Boolean(stopTime) && (
           <p>
-            Displaying the {n}th Fibonacci number {totalRenders} many times took
-            the {componentDescription}{' '}
-            {stopTime.getTime() - startTime.getTime()} milliseconds.
+            Calculating the function {totalRenders} many times took the{' '}
+            {componentDescription} {stopTime.getTime() - startTime.getTime()}{' '}
+            milliseconds.
           </p>
         )}
         {Boolean(component) && (

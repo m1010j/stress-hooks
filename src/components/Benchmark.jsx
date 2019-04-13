@@ -25,14 +25,8 @@ class Benchmark extends React.Component {
   }
 
   render() {
-    const { component: Component, n, withMemo } = this.props;
-    return (
-      <Component
-        n={n}
-        renderNumber={this.state.renderNumber}
-        withMemo={withMemo}
-      />
-    );
+    const { component: Component, ...rest } = this.props;
+    return <Component renderNumber={this.state.renderNumber} {...rest} />;
   }
 }
 

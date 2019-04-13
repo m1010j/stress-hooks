@@ -1,8 +1,8 @@
 import React from 'react';
-import nthFib from '../utils/nthFib';
 
 function FibFunctional(props) {
-  const result = nthFib(props.n);
+  const { benchmark, values } = this.props;
+  const result = benchmark(...values);
 
   return (
     <>

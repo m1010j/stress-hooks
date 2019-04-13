@@ -1,10 +1,10 @@
 import React from 'react';
-import nthFib from '../utils/nthFib';
 
 class FibClass extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { result: nthFib(props.n) };
+    const { benchmark, values } = this.props;
+    this.state = { result: benchmark(...values) };
   }
 
   render() {

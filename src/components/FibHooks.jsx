@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import nthFib from '../utils/nthFib';
 
 function FibHooks(props) {
+  const { benchmark, values } = props;
   const calculatedResult = props.withMemo
-    ? useMemo(() => nthFib(props.n), props.n)
-    : nthFib(props.n);
+    ? useMemo(() => benchmark(...values), props.n)
+    : benchmark(...values);
   const [result] = useState(calculatedResult);
 
   return (

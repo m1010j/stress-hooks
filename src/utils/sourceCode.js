@@ -1,8 +1,11 @@
 export const fibClassCode = `
+import React from 'react';
+
 class FibClass extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { result: nthFib(props.n) };
+    const { benchmark, values } = this.props;
+    this.state = { result: benchmark(...values) };
   }
 
   render() {
@@ -28,8 +31,11 @@ class FibClass extends React.Component {
 `;
 
 export const fibFunctionalCode = `
+import React from 'react';
+
 function FibFunctional(props) {
-  const result = nthFib(props.n);
+  const { benchmark, values } = this.props;
+  const result = benchmark(...values);
 
   return (
     <>
@@ -52,10 +58,13 @@ function FibFunctional(props) {
 `;
 
 export const fibHooksCode = `
+import React, { useState, useMemo } from 'react';
+
 function FibHooks(props) {
+  const { benchmark, values } = props;
   const calculatedResult = props.withMemo
-    ? useMemo(() => nthFib(props.n), props.n)
-    : nthFib(props.n);
+    ? useMemo(() => benchmark(...values), props.n)
+    : benchmark(...values);
   const [result] = useState(calculatedResult);
 
   return (
