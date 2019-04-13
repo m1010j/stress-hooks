@@ -172,8 +172,6 @@ props = {
       }
     }
 
-    console.log({ runtimeError });
-
     return (
       <>
         <h1>Stress Testing React Hooks</h1>
