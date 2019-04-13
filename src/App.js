@@ -143,23 +143,22 @@ withMemo: ${withMemo},
 }
       `;
 
-    const argumentIndices = Array.apply(null, { length: benchmark.length }).map(
-      Number.call,
-      Number
-    );
-    const argumentInputs = argumentIndices.map(idx => (
-      <label key={idx}>
-        Argument {idx} =
-        <input
-          name={`argument ${idx}`}
-          type="text"
-          value={values[idx]}
-          onChange={this.handleChangeArgument(idx)}
-          disabled={syntaxError}
-        />
-        <br />
-      </label>
-    ));
+    const argumentInputs = [];
+    for (let idx = 0; idx < benchmark.length; idx++) {
+      argumentInputs.push(
+        <label key={idx}>
+          Argument {idx}:{' '}
+          <input
+            name={`argument ${idx}`}
+            type="text"
+            value={values[idx]}
+            onChange={this.handleChangeArgument(idx)}
+            disabled={syntaxError}
+          />
+          <br />
+        </label>
+      );
+    }
 
     return (
       <>
@@ -180,7 +179,7 @@ withMemo: ${withMemo},
           <br />
           {argumentInputs}
           <label>
-            Total number of renders:
+            Total number of renders:{' '}
             <input
               name="total number of renders"
               type="number"
