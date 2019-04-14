@@ -4,12 +4,18 @@ import ClassComponent from './components/ClassComponent';
 import FunctionalComponent from './components/FunctionalComponent';
 import HooksComponent from './components/HooksComponent';
 import CodeSnippet from './components/CodeSnippet';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import retrieveArguments from 'retrieve-arguments';
 import {
   classComponentCode,
   functionalComponentCode,
   hooksComponentCode,
 } from './utils/sourceCode';
 import defaultBenchmark from './utils/defaultBenchmark';
+import retrieveArrowArguments from './utils/retrieveArrowArguments';
 import './App.css';
 
 const componentMap = {
@@ -63,8 +69,8 @@ class App extends React.Component {
     });
   };
 
-  handleChangeBenchmark = e => {
-    this.setState({ benchmarkBody: e.currentTarget.value });
+  handleChangeBenchmark = value => {
+    this.setState({ benchmarkBody: value });
   };
 
   handleUpdateBenchmark = () => {
@@ -73,7 +79,7 @@ class App extends React.Component {
       /* eslint-disable no-eval */
       eval(`benchmark = ${this.state.benchmarkBody}`);
       /* eslint-enable no-eval */
-      this.setState({ benchmark });
+      this.setState({ benchmark, syntaxError: null });
     } catch (error) {
       this.setState({ syntaxError: error.message, benchmark: null });
     }
@@ -130,13 +136,19 @@ class App extends React.Component {
       <React.Fragment>
         <h2>Benchmark function:</h2>
         <label>
-          Function body:
+          Benchmark function:
           <br />
-          <textarea
-            rows="12"
+          <Editor
             value={benchmarkBody}
+            onValueChange={this.handleChangeBenchmark}
+            highlight={code => highlight(code, languages.js)}
+            padding={10}
+            style={{
+              fontFamily: '"Fira code", "Fira Mono", monospace',
+              fontSize: 12,
+            }}
+            className="Editor"
             onBlur={this.handleUpdateBenchmark}
-            onChange={this.handleChangeBenchmark}
           />
         </label>
       </React.Fragment>
@@ -154,26 +166,26 @@ class App extends React.Component {
   };
 
   renderArgumentInputs = () => {
-    const { benchmark, values, syntaxError } = this.state;
-    const argumentInputs = [];
-    if (benchmark) {
-      for (let idx = 0; idx < benchmark.length; idx++) {
-        argumentInputs.push(
-          <label key={idx}>
-            Argument {idx}:{' '}
-            <input
-              name={`argument ${idx}`}
-              type="text"
-              value={values[idx]}
-              onChange={this.handleChangeArgument(idx)}
-              disabled={syntaxError}
-            />
-            <br />
-          </label>
-        );
-      }
+    const { benchmark, benchmarkBody, values, syntaxError } = this.state;
+    let benchmarkArguments = [];
+    try {
+      benchmarkArguments = retrieveArguments(benchmark);
+    } catch {
+      benchmarkArguments = retrieveArrowArguments(benchmarkBody);
     }
-    return argumentInputs;
+    return benchmarkArguments.map((argument, idx) => (
+      <label key={idx}>
+        {argument} ={' '}
+        <input
+          name={argument}
+          type="text"
+          value={values[idx]}
+          onChange={this.handleChangeArgument(idx)}
+          disabled={syntaxError}
+        />
+        <br />
+      </label>
+    ));
   };
 
   renderOptions = () => {
