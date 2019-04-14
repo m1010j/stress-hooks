@@ -171,7 +171,9 @@ class App extends React.Component {
     try {
       benchmarkArguments = retrieveArguments(benchmark);
     } catch {
-      benchmarkArguments = retrieveArrowArguments(benchmarkBody);
+      if (!syntaxError) {
+        benchmarkArguments = retrieveArrowArguments(benchmarkBody);
+      }
     }
     return benchmarkArguments.map((argument, idx) => (
       <label key={idx}>
