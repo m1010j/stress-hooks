@@ -3,6 +3,7 @@ import Benchmark from './components/Benchmark';
 import ClassComponent from './components/ClassComponent';
 import FunctionalComponent from './components/FunctionalComponent';
 import HooksComponent from './components/HooksComponent';
+import CodeSnippet from './components/CodeSnippet';
 import {
   classComponentCode,
   functionalComponentCode,
@@ -324,8 +325,8 @@ props = {
     return (
       Boolean(component) && (
         <React.Fragment>
-          <xmp>{componentCodeMap[component]}</xmp>
-          <xmp>{propsString}</xmp>
+          <CodeSnippet code={componentCodeMap[component]} />
+          <CodeSnippet code={propsString} />
         </React.Fragment>
       )
     );
