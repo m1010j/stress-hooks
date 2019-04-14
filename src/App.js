@@ -305,9 +305,17 @@ class App extends React.Component {
 
   renderBenchmarkInfo = () => {
     const { component, benchmark, values, withMemo } = this.state;
+    let benchmarkString = 'null';
+    if (benchmark) {
+      benchmarkString = benchmark.toString();
+      benchmarkString = benchmarkString.slice(
+        0,
+        benchmarkString.indexOf('{') + 1
+      );
+    }
     const propsString = `
 props = {
-  benchmark: ${benchmark && benchmark.toString().slice(0, 20)}...},
+  benchmark: ${benchmarkString}...},
   catchRuntimeError: errorMessage => {...},
   values: [${values.join(' ')}],
   withMemo: ${withMemo},
