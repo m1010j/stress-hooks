@@ -26,9 +26,9 @@ const componentMap = {
 };
 
 const componentDescriptionMap = {
-  class: 'class component',
-  functional: 'functional component without hooks',
-  hooks: 'functional component with hooks',
+  class: 'ClassComponent',
+  functional: 'FunctionalComponent',
+  hooks: 'HooksComponent',
 };
 
 const componentCodeMap = {
@@ -135,7 +135,6 @@ class App extends React.Component {
     const { benchmarkBody } = this.state;
     return (
       <React.Fragment>
-        <h2>Benchmark function:</h2>
         <label>
           Benchmark function:
           <br />
@@ -156,8 +155,12 @@ class App extends React.Component {
     const { syntaxError, runtimeError } = this.state;
     return (
       <React.Fragment>
-        {Boolean(syntaxError) && <p>Syntax error: {syntaxError}</p>}
-        {Boolean(runtimeError) && <p>Runtime error: {runtimeError}</p>}
+        {Boolean(syntaxError) && (
+          <p className="p__Error">Syntax error: {syntaxError}</p>
+        )}
+        {Boolean(runtimeError) && (
+          <p className="p__Error">Runtime error: {runtimeError}</p>
+        )}
       </React.Fragment>
     );
   };
@@ -238,15 +241,16 @@ class App extends React.Component {
           </label>
         </div>
         <label>
-          Use useMemo:
           <input
             name="withMemo"
             type="checkbox"
             checked={withMemo}
             onChange={this.handleChangeWithMemo}
             disabled={syntaxError || !this.isHooksComponent()}
-          />
+          />{' '}
+          use useMemo
         </label>
+        <br />
       </React.Fragment>
     );
   };
@@ -348,7 +352,6 @@ class App extends React.Component {
         <form>
           {this.renderBenchmarkFunction()}
           {this.renderErrors()}
-          <br />
           {this.renderArgumentInputs()}
           {this.renderOptions()}
           {this.renderGoButton()}

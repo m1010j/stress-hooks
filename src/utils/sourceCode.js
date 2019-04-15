@@ -58,7 +58,7 @@ export const hooksComponentCode = `import React, { useState, useMemo } from 'rea
 function HooksComponent(props) {
   const { benchmark, values } = props;
   const calculatedResult = props.withMemo
-    ? useMemo(() => benchmark(...values), props.n)
+    ? useMemo(() => benchmark(...values), props.values)
     : benchmark(...values);
   const [result] = useState(calculatedResult);
 
