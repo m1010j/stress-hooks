@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/stress-hooks/precache-manifest.7e8f229c9df23d7e2aa1449b402b120a.js"
+  "/stress-hooks/precache-manifest.f39cda9544ed4d0457a885f4684a6365.js"
 );
 
 workbox.clientsClaim();
