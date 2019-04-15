@@ -6,13 +6,12 @@ function HooksComponent(props) {
   try {
     console.log(props.withMemo);
     calculatedResult = props.withMemo
-      ? useMemo(() => benchmark(...values), props.n)
+      ? useMemo(() => benchmark(...values), props.values)
       : benchmark(...values);
   } catch (error) {
     catchRuntimeError(error.message);
   }
   const [result] = useState(calculatedResult);
-
   return (
     <>
       <h2>Functional component with Hooks</h2>
