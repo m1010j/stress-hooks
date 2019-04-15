@@ -1,5 +1,4 @@
-export const classComponentCode = `
-import React from 'react';
+export const classComponentCode = `import React from 'react';
 
 class ClassComponent extends React.Component {
   constructor(props) {
@@ -27,11 +26,9 @@ class ClassComponent extends React.Component {
       </>
     );
   }
-}
-`;
+}`;
 
-export const functionalComponentCode = `
-import React from 'react';
+export const functionalComponentCode = `import React from 'react';
 
 function FunctionalComponent(props) {
   const { benchmark, values } = this.props;
@@ -54,11 +51,9 @@ function FunctionalComponent(props) {
       </table>
     </>
   );
-}
-`;
+}`;
 
-export const hooksComponentCode = `
-import React, { useState, useMemo } from 'react';
+export const hooksComponentCode = `import React, { useState, useMemo } from 'react';
 
 function HooksComponent(props) {
   const { benchmark, values } = props;
@@ -84,5 +79,4 @@ function HooksComponent(props) {
       </table>
     </>
   );
-}
-`;
+}`;

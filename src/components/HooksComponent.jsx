@@ -4,6 +4,7 @@ function HooksComponent(props) {
   const { benchmark, values, catchRuntimeError } = props;
   let calculatedResult;
   try {
+    console.log(props.withMemo);
     calculatedResult = props.withMemo
       ? useMemo(() => benchmark(...values), props.n)
       : benchmark(...values);

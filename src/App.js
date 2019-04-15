@@ -1,14 +1,15 @@
 import React from 'react';
-import Benchmark from './components/Benchmark';
-import ClassComponent from './components/ClassComponent';
-import FunctionalComponent from './components/FunctionalComponent';
-import HooksComponent from './components/HooksComponent';
-import CodeSnippet from './components/CodeSnippet';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import retrieveArguments from 'retrieve-arguments';
+
+import Benchmark from './components/Benchmark';
+import ClassComponent from './components/ClassComponent';
+import FunctionalComponent from './components/FunctionalComponent';
+import HooksComponent from './components/HooksComponent';
+import CodeSnippet from './components/CodeSnippet';
 import {
   classComponentCode,
   functionalComponentCode,
@@ -143,10 +144,6 @@ class App extends React.Component {
             onValueChange={this.handleChangeBenchmark}
             highlight={code => highlight(code, languages.js)}
             padding={10}
-            style={{
-              fontFamily: '"Fira code", "Fira Mono", monospace',
-              fontSize: 12,
-            }}
             className="Editor"
             onBlur={this.handleUpdateBenchmark}
           />
@@ -328,14 +325,12 @@ class App extends React.Component {
         benchmarkString.indexOf('{') + 1
       );
     }
-    const propsString = `
-props = {
+    const propsString = `props = {
   benchmark: ${benchmarkString}...},
   catchRuntimeError: errorMessage => {...},
   values: [${values.join(' ')}],
   withMemo: ${withMemo},
-}
-      `;
+}`;
     return (
       Boolean(component) && (
         <React.Fragment>
