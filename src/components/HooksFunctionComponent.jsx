@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-function FunctionalComponent(props) {
+function HooksFunctionComponent(props) {
   const { benchmark, args } = props;
-  const result = benchmark(...args);
-
+  const [result] = useState(() => benchmark(...args));
   return (
     <>
-      <h2>Functional component without Hooks</h2>
+      <h2>Functional component with Hooks</h2>
       <table>
         <tbody>
           <tr>
@@ -23,4 +22,4 @@ function FunctionalComponent(props) {
   );
 }
 
-export default FunctionalComponent;
+export default HooksFunctionComponent;

@@ -1,17 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 
 function HooksComponent(props) {
-  const { benchmark, values, catchRuntimeError } = props;
-  let calculatedResult;
-  try {
-    console.log(props.withMemo);
-    calculatedResult = props.withMemo
-      ? useMemo(() => benchmark(...values), props.values)
-      : benchmark(...values);
-  } catch (error) {
-    catchRuntimeError(error.message);
-  }
-  const [result] = useState(calculatedResult);
+  const { benchmark, args } = props;
+  const [result] = useState(benchmark(...args));
   return (
     <>
       <h2>Functional component with Hooks</h2>

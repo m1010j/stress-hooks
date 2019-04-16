@@ -9,11 +9,17 @@ import Benchmark from './components/Benchmark';
 import ClassComponent from './components/ClassComponent';
 import FunctionalComponent from './components/FunctionalComponent';
 import HooksComponent from './components/HooksComponent';
+import HooksMemoComponent from './components/HooksMemoComponent';
+import HooksFunctionComponent from './components/HooksFunctionComponent';
+import HooksRefComponent from './components/HooksRefComponent';
 import CodeSnippet from './components/CodeSnippet';
 import {
   classComponentCode,
   functionalComponentCode,
   hooksComponentCode,
+  hooksMemoComponentCode,
+  hooksFunctionComponentCode,
+  hooksRefComponentCode,
 } from './utils/sourceCode';
 import defaultBenchmark from './utils/defaultBenchmark';
 import retrieveArrowArguments from './utils/retrieveArrowArguments';
@@ -23,19 +29,39 @@ const componentMap = {
   class: ClassComponent,
   functional: FunctionalComponent,
   hooks: HooksComponent,
+  hooksMemo: HooksMemoComponent,
+  hooksFunction: HooksFunctionComponent,
+  hooksRef: HooksRefComponent,
 };
 
 const componentDescriptionMap = {
   class: 'ClassComponent',
   functional: 'FunctionalComponent',
   hooks: 'HooksComponent',
+  hooksMemo: 'HooksMemoComponent',
+  hooksFunction: 'HooksFunctionComponent',
+  hooksRef: 'HooksRefComponent',
 };
 
 const componentCodeMap = {
   class: classComponentCode,
   functional: functionalComponentCode,
   hooks: hooksComponentCode,
+  hooksMemo: hooksMemoComponentCode,
+  hooksFunction: hooksFunctionComponentCode,
+  hooksRef: hooksRefComponentCode,
 };
+
+const specializedHooksComponentStrings = new Set([
+  'hooksMemo',
+  'hooksFunction',
+  'hooksRef',
+]);
+
+const genericHooksComponentStrings = new Set([
+  ...specializedHooksComponentStrings,
+  'hooks',
+]);
 
 const clearedTimes = { startTime: null, endTime: null };
 
@@ -51,12 +77,12 @@ class App extends React.Component {
       benchmark: defaultBenchmarkFunction,
       component: null,
       runBenchmark: false,
-      withMemo: false,
-      values: [35],
+      hooksSelected: false,
+      args: [35],
       startTime: null,
       stopTime: null,
       totalRenders: 10,
-      benchmarkBody: defaultBenchmark,
+      benchmarkString: defaultBenchmark,
       syntaxError: null,
       runtimeError: null,
     };
@@ -71,14 +97,14 @@ class App extends React.Component {
   };
 
   handleChangeBenchmark = value => {
-    this.setState({ benchmarkBody: value });
+    this.setState({ benchmarkString: value });
   };
 
   handleUpdateBenchmark = () => {
     try {
       let benchmark;
       /* eslint-disable no-eval */
-      eval(`benchmark = ${this.state.benchmarkBody}`);
+      eval(`benchmark = ${this.state.benchmarkString}`);
       /* eslint-enable no-eval */
       this.setState({ benchmark, syntaxError: null });
     } catch (error) {
@@ -87,9 +113,9 @@ class App extends React.Component {
   };
 
   handleChangeArgument = idx => e => {
-    const values = this.state.values.slice();
-    values.splice(idx, 1, e.currentTarget.value);
-    this.setState({ values, ...clearedTimes });
+    const args = this.state.args.slice();
+    args.splice(idx, 1, e.currentTarget.value);
+    this.setState({ args, ...clearedTimes });
   };
 
   handleChangeTotalRenders = e => {
@@ -102,13 +128,32 @@ class App extends React.Component {
     };
   };
 
-  handleChangeWithMemo = () => {
-    this.setState(state => ({ withMemo: !state.withMemo, ...clearedTimes }));
+  handleChangeComponent = component => {
+    return e => {
+      if (
+        specializedHooksComponentStrings.has(component) &&
+        !e.currentTarget.checked
+      ) {
+        this.setState({ component: 'hooks', ...clearedTimes });
+      } else {
+        this.setState({ component, ...clearedTimes });
+      }
+    };
   };
 
   handleClickRunBenchmark = e => {
     e.preventDefault();
-    this.setState({ runBenchmark: true, startTime: new Date() });
+    const { benchmark, args } = this.state;
+    try {
+      benchmark(...args);
+      this.setState({
+        runBenchmark: true,
+        startTime: new Date(),
+        runtimeError: null,
+      });
+    } catch (error) {
+      this.catchRuntimeError(error.message);
+    }
   };
 
   stopBenchmark = () => {
@@ -131,15 +176,31 @@ class App extends React.Component {
     return this.isComponent('hooks');
   };
 
+  isHooksMemoComponent = () => {
+    return this.isComponent('hooksMemo');
+  };
+
+  isHooksFunctionComponent = () => {
+    return this.isComponent('hooksFunction');
+  };
+
+  isHooksRefComponent = () => {
+    return this.isComponent('hooksRef');
+  };
+
+  isGenericHooksComponent = () => {
+    return genericHooksComponentStrings.has(this.state.component);
+  };
+
   renderBenchmarkFunction = () => {
-    const { benchmarkBody } = this.state;
+    const { benchmarkString } = this.state;
     return (
       <React.Fragment>
         <label>
           Benchmark function:
           <br />
           <Editor
-            value={benchmarkBody}
+            value={benchmarkString}
             onValueChange={this.handleChangeBenchmark}
             highlight={code => highlight(code, languages.js)}
             padding={10}
@@ -166,13 +227,13 @@ class App extends React.Component {
   };
 
   renderArgumentInputs = () => {
-    const { benchmark, benchmarkBody, values, syntaxError } = this.state;
+    const { benchmark, benchmarkString, args, syntaxError } = this.state;
     let benchmarkArguments = [];
     try {
       benchmarkArguments = retrieveArguments(benchmark);
     } catch {
       if (!syntaxError) {
-        benchmarkArguments = retrieveArrowArguments(benchmarkBody);
+        benchmarkArguments = retrieveArrowArguments(benchmarkString);
       }
     }
     return benchmarkArguments.map((argument, idx) => (
@@ -181,7 +242,7 @@ class App extends React.Component {
         <input
           name={argument}
           type="text"
-          value={values[idx]}
+          value={args[idx]}
           onChange={this.handleChangeArgument(idx)}
           disabled={syntaxError}
         />
@@ -191,7 +252,7 @@ class App extends React.Component {
   };
 
   renderOptions = () => {
-    const { totalRenders, syntaxError, withMemo } = this.state;
+    const { totalRenders, syntaxError } = this.state;
     return (
       <React.Fragment>
         <label>
@@ -233,24 +294,49 @@ class App extends React.Component {
             <input
               type="radio"
               value="hooks"
-              checked={this.isHooksComponent()}
+              checked={this.isGenericHooksComponent()}
               onChange={this.handleChangeComponent('hooks')}
               disabled={syntaxError}
             />
             {componentDescriptionMap.hooks}
           </label>
         </div>
-        <label>
-          <input
-            name="withMemo"
-            type="checkbox"
-            checked={withMemo}
-            onChange={this.handleChangeWithMemo}
-            disabled={syntaxError || !this.isHooksComponent()}
-          />{' '}
-          use useMemo
-        </label>
-        <br />
+        <div className="checkbox">
+          <label>
+            <input
+              type="checkbox"
+              value="hooksMemo"
+              checked={this.isHooksMemoComponent()}
+              onChange={this.handleChangeComponent('hooksMemo')}
+              disabled={!this.isGenericHooksComponent() || syntaxError}
+            />
+            {componentDescriptionMap.hooksMemo}
+          </label>
+        </div>
+        <div className="checkbox">
+          <label>
+            <input
+              type="checkbox"
+              value="hooksFunction"
+              checked={this.isHooksFunctionComponent()}
+              onChange={this.handleChangeComponent('hooksFunction')}
+              disabled={!this.isGenericHooksComponent() || syntaxError}
+            />
+            {componentDescriptionMap.hooksFunction}
+          </label>
+        </div>
+        <div className="checkbox">
+          <label>
+            <input
+              type="checkbox"
+              value="hooksRef"
+              checked={this.isHooksRefComponent()}
+              onChange={this.handleChangeComponent('hooksRef')}
+              disabled={!this.isGenericHooksComponent() || syntaxError}
+            />
+            {componentDescriptionMap.hooksRef}
+          </label>
+        </div>
       </React.Fragment>
     );
   };
@@ -272,20 +358,17 @@ class App extends React.Component {
       runBenchmark,
       component,
       benchmark,
-      values,
+      args,
       totalRenders,
-      withMemo,
     } = this.state;
     return (
       runBenchmark && (
         <Benchmark
           component={componentMap[component]}
           benchmark={benchmark}
-          values={values}
+          args={args}
           totalRenders={totalRenders}
-          withMemo={withMemo}
           stopBenchmark={this.stopBenchmark}
-          catchRuntimeError={this.catchRuntimeError}
         />
       )
     );
@@ -298,14 +381,9 @@ class App extends React.Component {
       stopTime,
       totalRenders,
       component,
-      withMemo,
     } = this.state;
 
-    const componentDescription = this.isHooksComponent()
-      ? `${componentDescriptionMap[component]} ${
-          withMemo ? '' : 'without '
-        }using useMemo`
-      : componentDescriptionMap[component];
+    const componentDescription = componentDescriptionMap[component];
     return (
       !runBenchmark &&
       Boolean(startTime) &&
@@ -319,27 +397,12 @@ class App extends React.Component {
     );
   };
 
-  renderBenchmarkInfo = () => {
-    const { component, benchmark, values, withMemo } = this.state;
-    let benchmarkString = 'null';
-    if (benchmark) {
-      benchmarkString = benchmark.toString();
-      benchmarkString = benchmarkString.slice(
-        0,
-        benchmarkString.indexOf('{') + 1
-      );
-    }
-    const propsString = `props = {
-  benchmark: ${benchmarkString}...},
-  catchRuntimeError: errorMessage => {...},
-  values: [${values.join(' ')}],
-  withMemo: ${withMemo},
-}`;
+  renderBenchmarkCode = () => {
+    const { component } = this.state;
     return (
       Boolean(component) && (
         <React.Fragment>
           <CodeSnippet code={componentCodeMap[component]} />
-          <CodeSnippet code={propsString} />
         </React.Fragment>
       )
     );
@@ -358,7 +421,7 @@ class App extends React.Component {
         </form>
         {this.renderBenchmark()}
         {this.renderResults()}
-        {this.renderBenchmarkInfo()}
+        {this.renderBenchmarkCode()}
       </>
     );
   }

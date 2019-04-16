@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 
-function FunctionalComponent(props) {
+function HooksRefComponent(props) {
   const { benchmark, args } = props;
-  const result = benchmark(...args);
-
+  const ref = useRef(null);
+  if (ref.current === null) {
+    ref.current = benchmark(...args);
+  }
+  const [result] = useState(ref.current);
   return (
     <>
-      <h2>Functional component without Hooks</h2>
+      <h2>Functional component with Hooks</h2>
       <table>
         <tbody>
           <tr>
@@ -23,4 +26,4 @@ function FunctionalComponent(props) {
   );
 }
 
-export default FunctionalComponent;
+export default HooksRefComponent;

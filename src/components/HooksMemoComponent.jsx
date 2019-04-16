@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 
-function FunctionalComponent(props) {
+function HooksMemoComponent(props) {
   const { benchmark, args } = props;
-  const result = benchmark(...args);
-
+  const calculatedResult = useMemo(() => benchmark(...args), props.args);
+  const [result] = useState(calculatedResult);
   return (
     <>
-      <h2>Functional component without Hooks</h2>
+      <h2>Functional component with Hooks</h2>
       <table>
         <tbody>
           <tr>
@@ -23,4 +23,4 @@ function FunctionalComponent(props) {
   );
 }
 
-export default FunctionalComponent;
+export default HooksMemoComponent;
