@@ -217,10 +217,10 @@ class App extends React.Component {
     return (
       <React.Fragment>
         {Boolean(syntaxError) && (
-          <p className="p__Error">Syntax error: {syntaxError}</p>
+          <p className="p--Error">Syntax error: {syntaxError}</p>
         )}
         {Boolean(runtimeError) && (
-          <p className="p__Error">Runtime error: {runtimeError}</p>
+          <p className="p--Error">Runtime error: {runtimeError}</p>
         )}
       </React.Fragment>
     );
@@ -253,6 +253,16 @@ class App extends React.Component {
 
   renderOptions = () => {
     const { totalRenders, syntaxError } = this.state;
+
+    const radioContainerClass = `radioContainer${
+      syntaxError ? ' radioContainer--disabled' : ''
+    }`;
+    const checkboxContainerClass = `checkboxContainer${
+      !this.isGenericHooksComponent() || syntaxError
+        ? ' checkboxContainer--disabled'
+        : ''
+    }`;
+
     return (
       <React.Fragment>
         <label>
@@ -265,7 +275,7 @@ class App extends React.Component {
             disabled={syntaxError}
           />
         </label>
-        <div className="radio">
+        <div className={radioContainerClass}>
           <label>
             <input
               type="radio"
@@ -277,7 +287,7 @@ class App extends React.Component {
             {componentDescriptionMap.class}
           </label>
         </div>
-        <div className="radio">
+        <div className={radioContainerClass}>
           <label>
             <input
               type="radio"
@@ -289,7 +299,7 @@ class App extends React.Component {
             {componentDescriptionMap.functional}
           </label>
         </div>
-        <div className="radio">
+        <div className={radioContainerClass}>
           <label>
             <input
               type="radio"
@@ -301,7 +311,7 @@ class App extends React.Component {
             {componentDescriptionMap.hooks}
           </label>
         </div>
-        <div className="checkbox">
+        <div className={checkboxContainerClass}>
           <label>
             <input
               type="checkbox"
@@ -313,7 +323,7 @@ class App extends React.Component {
             {componentDescriptionMap.hooksMemo}
           </label>
         </div>
-        <div className="checkbox">
+        <div className={checkboxContainerClass}>
           <label>
             <input
               type="checkbox"
@@ -325,7 +335,7 @@ class App extends React.Component {
             {componentDescriptionMap.hooksFunction}
           </label>
         </div>
-        <div className="checkbox">
+        <div className={checkboxContainerClass}>
           <label>
             <input
               type="checkbox"
@@ -348,7 +358,7 @@ class App extends React.Component {
         onClick={this.handleClickRunBenchmark}
         disabled={syntaxError || !component}
       >
-        Go!
+        Run benchmark!
       </button>
     );
   };
@@ -411,7 +421,7 @@ class App extends React.Component {
   render() {
     return (
       <>
-        <h1>Stress Testing React Hooks</h1>
+        <h1 className="h1Title">Stress Testing React Hooks</h1>
         <form>
           {this.renderBenchmarkFunction()}
           {this.renderErrors()}
