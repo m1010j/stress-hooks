@@ -10,7 +10,8 @@
     "react-dom": "^16.8.6",
     "react-scripts": "2.1.8",
     "react-simple-code-editor": "^0.9.10",
-    "retrieve-arguments": "^1.0.1"
+    "retrieve-arguments": "^1.0.1",
+    "worker-loader": "^2.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

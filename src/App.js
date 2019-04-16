@@ -1,5 +1,8 @@
 import React from 'react';
 import Editor from 'react-simple-code-editor';
+/* eslint-disable import/no-webpack-loader-syntax */
+import Worker from 'worker-loader!./utils/worker.js';
+/* eslint-enable import/no-webpack-loader-syntax */
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
@@ -85,6 +88,7 @@ class App extends React.Component {
       benchmarkString: defaultBenchmark,
       syntaxError: null,
       runtimeError: null,
+      worker: new Worker(),
     };
   }
 
@@ -143,17 +147,24 @@ class App extends React.Component {
 
   handleClickRunBenchmark = e => {
     e.preventDefault();
-    const { benchmark, args } = this.state;
-    try {
-      benchmark(...args);
-      this.setState({
-        runBenchmark: true,
-        startTime: new Date(),
-        runtimeError: null,
-      });
-    } catch (error) {
-      this.catchRuntimeError(error.message);
-    }
+    const { args, worker, benchmarkString } = this.state;
+    worker.postMessage({
+      benchmarkString,
+      serizliedArgs: JSON.stringify(args),
+    });
+    worker.onmessage = function(e) {
+      console.log({ e });
+    };
+    // try {
+    //   benchmark(...args);
+    //   this.setState({
+    //     runBenchmark: true,
+    //     startTime: new Date(),
+    //     runtimeError: null,
+    //   });
+    // } catch (error) {
+    //   this.catchRuntimeError(error.message);
+    // }
   };
 
   stopBenchmark = () => {
