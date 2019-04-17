@@ -203,18 +203,18 @@ class App extends React.Component {
     const { benchmarkString } = this.state;
     return (
       <React.Fragment>
-        <label>
-          Benchmark function:
-          <br />
-          <Editor
-            value={benchmarkString}
-            onValueChange={this.handleChangeBenchmark}
-            highlight={code => highlight(code, languages.js)}
-            padding={10}
-            className="Editor"
-            onBlur={this.handleUpdateBenchmark}
-          />
+        <label htmlFor="benchmarkEditor" className="benchmarkEditor__label">
+          1. Enter benchmark function (or use the one provided)
         </label>
+        <Editor
+          id="benchmarkEditor"
+          value={benchmarkString}
+          onValueChange={this.handleChangeBenchmark}
+          highlight={code => highlight(code, languages.js)}
+          padding={10}
+          className="Editor"
+          onBlur={this.handleUpdateBenchmark}
+        />
       </React.Fragment>
     );
   };
@@ -233,8 +233,14 @@ class App extends React.Component {
     );
   };
 
-  renderArgumentInputs = () => {
-    const { benchmark, benchmarkString, args, syntaxError } = this.state;
+  renderParametersSelect = () => {
+    const {
+      benchmark,
+      benchmarkString,
+      args,
+      syntaxError,
+      totalRenders,
+    } = this.state;
     let benchmarkArguments = [];
     try {
       benchmarkArguments = retrieveArguments(benchmark);
@@ -243,10 +249,11 @@ class App extends React.Component {
         benchmarkArguments = retrieveArrowArguments(benchmarkString);
       }
     }
-    return benchmarkArguments.map((argument, idx) => (
-      <label key={idx}>
-        {argument} ={' '}
+    const benchmarkArgumentInputs = benchmarkArguments.map((argument, idx) => (
+      <React.Fragment key={idx}>
+        <label htmlFor={`benchmarkArgument_${idx}`}>{argument} = </label>
         <input
+          id={`benchmarkArgument_${idx}`}
           name={argument}
           type="text"
           value={args[idx]}
@@ -254,12 +261,35 @@ class App extends React.Component {
           disabled={syntaxError}
         />
         <br />
-      </label>
+      </React.Fragment>
     ));
+    return (
+      <React.Fragment>
+        <p className="p__parameters">
+          2. Select parameters (or use the ones provided)
+        </p>
+        <div className="parametersContainer">
+          <div className="benchmarkArgumentInputsContainer">
+            {benchmarkArgumentInputs}
+          </div>
+          <div className="totalRendersContainer">
+            <label htmlFor="totalRendersInput">Total number of renders: </label>
+            <input
+              id="totalRendersInput"
+              name="total number of renders"
+              type="number"
+              value={totalRenders}
+              onChange={this.handleChangeTotalRenders}
+              disabled={syntaxError}
+            />
+          </div>
+        </div>
+      </React.Fragment>
+    );
   };
 
-  renderOptions = () => {
-    const { totalRenders, syntaxError } = this.state;
+  renderComponentSelect = () => {
+    const { syntaxError } = this.state;
 
     const radioContainerClass = `radioContainer${
       syntaxError ? ' radioContainer--disabled' : ''
@@ -272,16 +302,7 @@ class App extends React.Component {
 
     return (
       <React.Fragment>
-        <label>
-          Total number of renders:{' '}
-          <input
-            name="total number of renders"
-            type="number"
-            value={totalRenders}
-            onChange={this.handleChangeTotalRenders}
-            disabled={syntaxError}
-          />
-        </label>
+        <p className="p__componentSelect">3. Select component to benchmark</p>
         <div className="componentSelectContainer">
           <div
             className={`${radioContainerClass}${
@@ -427,7 +448,7 @@ class App extends React.Component {
     if (!component) return null;
     return (
       <button onClick={this.handleClickRunBenchmark} className="runButton">
-        Run Benchmark!
+        4. Run benchmark!
       </button>
     );
   };
@@ -490,12 +511,12 @@ class App extends React.Component {
   render() {
     return (
       <>
-        <h1 className="h1Title">Stress Testing React Hooks</h1>
+        <h1 className="h1__title">Stress Testing React Hooks</h1>
         <form>
           {this.renderBenchmarkFunction()}
           {this.renderErrors()}
-          {this.renderArgumentInputs()}
-          {this.renderOptions()}
+          {this.renderParametersSelect()}
+          {this.renderComponentSelect()}
           {this.renderRunButton()}
         </form>
         {this.renderBenchmark()}

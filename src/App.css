@@ -7,15 +7,55 @@ body {
   width: 660px;
 }
 
-input[type='radio'] {
-  display: none;
+.h1__title {
+  text-align: center;
+  font-size: 49px;
+  color: #fff586;
 }
 
-input[type='text'],
-input[type='number'] {
-  box-shadow: inset 0 0 0.1rem rgba(0, 0, 0, 0.16),
-    inset 0 0.1rem 0.2rem rgba(0, 0, 0, 0.32);
-  width: 100px;
+.benchmarkEditor__label,
+.p__parameters,
+.p__componentSelect,
+.runButton {
+  border-bottom: 3px solid #fff586;
+  margin: 15px 0 6px 0;
+  font-size: 20px;
+}
+
+.benchmarkEditor__label,
+.p__parameters,
+.p__componentSelect {
+  display: block;
+}
+
+.parametersContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.benchmarkArgumentInputsContainer,
+.totalRendersContainer {
+  width: 50%;
+}
+
+.benchmarkArgumentInputsContainer label,
+.totalRendersContainer label,
+.benchmarkArgumentInputsContainer input,
+.totalRendersContainer input {
+  font-size: 16px;
+}
+
+.benchmarkArgumentInputsContainer input {
+  width: 200px;
+}
+
+.totalRendersContainer input {
+  width: 145px;
+}
+
+input[type='radio'] {
+  display: none;
 }
 
 input[type='number']::-webkit-inner-spin-button,
@@ -63,9 +103,13 @@ input[type='text'] {
 .runButton {
   transition: background-color 0.2s ease, color 0.2s ease;
   background-color: #444962;
-  font-weight: bold;
   user-select: none;
   color: white;
+}
+
+.radioContainer,
+.memoRadioContainer {
+  font-weight: bold;
 }
 
 .radioContainer {
@@ -147,20 +191,22 @@ input[type='text'] {
 }
 
 .runButton {
+  box-sizing: border-box;
   cursor: pointer;
-  font-size: 16px;
-  margin: 3px 0;
+  font-size: 20px;
   width: 100%;
   height: 47px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
 }
 
-.h1Title {
-  text-align: center;
-  font-size: 40px;
+.runButton:hover,
+.runButton:focus {
+  border-bottom: 3px solid #e9b183;
 }
 
 .p--Error {
@@ -189,11 +235,6 @@ pre {
  *
  * Ported for PrismJS by Albert Vallverdu [@byverdu]
  */
-
-.Editor {
-  box-shadow: inset 0 0 0.1rem rgba(0, 0, 0, 0.16),
-    inset 0 0.1rem 0.2rem rgba(0, 0, 0, 0.32);
-}
 
 code[class*='language-'],
 pre[class*='language-'],
