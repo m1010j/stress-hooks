@@ -1,5 +1,5 @@
 {
-  "main.css": "/stress-hooks/static/css/main.13595107.chunk.css",
+  "main.css": "/stress-hooks/static/css/main.8534893f.chunk.css",
   "main.js": "/stress-hooks/static/js/main.621fee33.chunk.js",
   "main.js.map": "/stress-hooks/static/js/main.621fee33.chunk.js.map",
   "runtime~main.js": "/stress-hooks/static/js/runtime~main.1fd83dc2.js",
@@ -7,7 +7,7 @@
   "static/js/2.4c93477b.chunk.js": "/stress-hooks/static/js/2.4c93477b.chunk.js",
   "static/js/2.4c93477b.chunk.js.map": "/stress-hooks/static/js/2.4c93477b.chunk.js.map",
   "index.html": "/stress-hooks/index.html",
-  "precache-manifest.bcb791f92a52c006dca6a59640cd1b38.js": "/stress-hooks/precache-manifest.bcb791f92a52c006dca6a59640cd1b38.js",
+  "precache-manifest.61d3dce016a2c3d7e32b9a15a33b465a.js": "/stress-hooks/precache-manifest.61d3dce016a2c3d7e32b9a15a33b465a.js",
   "service-worker.js": "/stress-hooks/service-worker.js",
-  "static/css/main.13595107.chunk.css.map": "/stress-hooks/static/css/main.13595107.chunk.css.map"
+  "static/css/main.8534893f.chunk.css.map": "/stress-hooks/static/css/main.8534893f.chunk.css.map"
 }
