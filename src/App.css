@@ -7,6 +7,10 @@ body {
   width: 660px;
 }
 
+input[type='radio'] {
+  display: none;
+}
+
 input[type='text'],
 input[type='number'] {
   box-shadow: inset 0 0 0.1rem rgba(0, 0, 0, 0.16),
@@ -24,8 +28,8 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
-input,
-button {
+input[type='number'],
+input[type='text'] {
   color: #eeeeee;
   background-color: #282a36;
   border: none;
@@ -33,29 +37,125 @@ button {
   margin: 4px 0;
 }
 
-input[type='radio'],
-input[type='checkbox'] {
-  margin-right: 10px;
+.componentSelectContainer {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  height: 50px;
+  box-sizing: border-box;
 }
 
-button {
-  padding: 4px 10px;
-  box-shadow: 0 0 1px rgba(255, 255, 255, 0.16),
-    0 1px 2px rgba(255, 255, 255, 0.32);
+.benchmarkCode {
+  position: relative;
 }
 
-.checkboxContainer,
+.hooksComponentSelectContainer {
+  width: 100%;
+  position: absolute;
+  display: grid;
+  grid-template-columns: auto 70.6666666667px 3px 70.6666666667px 3px 70.6666666667px 3px 70.6666666667px;
+  grid-template-rows: repeat(1, 50px);
+  z-index: 1;
+}
+
 .radioContainer,
-button,
-label,
-input[type='radio'],
-input[type='checkbox'] {
+.memoRadioContainer,
+.runButton {
+  transition: background-color 0.2s ease, color 0.2s ease;
+  background-color: #444962;
+  font-weight: bold;
+  user-select: none;
+  color: white;
+}
+
+.radioContainer {
+  width: 33.333333%;
+  height: calc(100%-3px);
+  margin-bottom: 3px;
+}
+
+.radioContainer label,
+.memoRadioContainer label {
   cursor: pointer;
 }
 
-button:disabled {
-  cursor: not-allowed;
-  color: #808080;
+.radioContainer:hover,
+.radioContainer:focus,
+.memoRadioContainer:hover,
+.memoRadioContainer:focus,
+.runButton:hover,
+.runButton:focus {
+  background-color: #e9b183;
+  color: black;
+}
+
+.radioContainer--checked,
+.radioContainer--checked:hover,
+.memoRadioContainer--checked,
+.memoRadioContainer--checked:hover {
+  background-color: #fff586;
+  color: black;
+}
+
+.radioContainer--checked label:hover,
+.radioContainer--checked:hover label:hover {
+  cursor: auto;
+}
+
+.radioContainer:first-of-type {
+  margin-right: 3px;
+}
+
+.radioContainer:last-of-type {
+  margin-left: 3px;
+}
+
+.radioContainer label {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.memoRadioContainer {
+  grid-row-start: 1;
+}
+
+.memoRadioContainer label {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#memoRadioContainer--naive {
+  grid-column: 2 / 3;
+}
+
+#memoRadioContainer--memo {
+  grid-column: 4 / 5;
+}
+
+#memoRadioContainer--function {
+  grid-column: 6 / 7;
+}
+
+#memoRadioContainer--ref {
+  grid-column: 8 / 9;
+}
+
+.runButton {
+  cursor: pointer;
+  font-size: 16px;
+  margin: 3px 0;
+  width: 100%;
+  height: 47px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
 }
 
 .h1Title {
@@ -75,6 +175,7 @@ button:disabled {
 pre {
   width: 660px;
   padding: 0;
+  margin: 0;
   box-sizing: border-box;
 }
 
@@ -118,7 +219,7 @@ pre[class*='language-'],
 /* Code blocks */
 pre[class*='language-'] {
   padding: 10px;
-  margin: 0.5em 0;
+  margin: 0;
   overflow: auto;
 }
 

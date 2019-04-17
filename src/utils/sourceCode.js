@@ -117,16 +117,12 @@ export const hooksFunctionComponentCode = `function HooksFunctionComponent(props
 }`;
 
 export const hooksRefComponentCode = `function HooksRefComponent(props) {
-  const { benchmark, values } = props;
+  const { benchmark, args } = props;
   const ref = useRef(null);
-  function getCalculatedResult() {
-    let { current } = ref;
-    if (current === null) {
-      current = benchmark(...values);
-    }
-    return current;
+  if (ref.current === null) {
+    ref.current = benchmark(...args);
   }
-  const [result] = useState(getCalculatedResult());
+  const [result] = useState(ref.current);
   return (
     <>
       <h2>Functional component with Hooks</h2>

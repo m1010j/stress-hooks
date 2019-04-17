@@ -34,10 +34,17 @@ const componentMap = {
   hooksRef: HooksRefComponent,
 };
 
-const componentDescriptionMap = {
+const componentShortDescriptionMap = {
   class: 'ClassComponent',
   functional: 'FunctionalComponent',
   hooks: 'HooksComponent',
+  hooksMemo: 'Memo',
+  hooksFunction: 'Function',
+  hooksRef: 'Ref',
+};
+
+const componentFullDescriptionMap = {
+  ...componentShortDescriptionMap,
   hooksMemo: 'HooksMemoComponent',
   hooksFunction: 'HooksFunctionComponent',
   hooksRef: 'HooksRefComponent',
@@ -257,9 +264,9 @@ class App extends React.Component {
     const radioContainerClass = `radioContainer${
       syntaxError ? ' radioContainer--disabled' : ''
     }`;
-    const checkboxContainerClass = `checkboxContainer${
+    const memoRadioContainerClass = `memoRadioContainer${
       !this.isGenericHooksComponent() || syntaxError
-        ? ' checkboxContainer--disabled'
+        ? ' memoRadioContainer--disabled'
         : ''
     }`;
 
@@ -275,90 +282,152 @@ class App extends React.Component {
             disabled={syntaxError}
           />
         </label>
-        <div className={radioContainerClass}>
-          <label>
+        <div className="componentSelectContainer">
+          <div
+            className={`${radioContainerClass}${
+              this.isClassComponent() ? ' radioContainer--checked' : ''
+            }`}
+          >
             <input
+              id="radioInput--class"
               type="radio"
               value="class"
               checked={this.isClassComponent()}
               onChange={this.handleChangeComponent('class')}
               disabled={syntaxError}
             />
-            {componentDescriptionMap.class}
-          </label>
-        </div>
-        <div className={radioContainerClass}>
-          <label>
+            <label htmlFor="radioInput--class">
+              {componentShortDescriptionMap.class}
+            </label>
+          </div>
+          <div
+            className={`${radioContainerClass}${
+              this.isFunctionalComponent() ? ' radioContainer--checked' : ''
+            }`}
+          >
             <input
+              id="radioInput--functional"
               type="radio"
               value="functional"
               checked={this.isFunctionalComponent()}
               onChange={this.handleChangeComponent('functional')}
               disabled={syntaxError}
             />
-            {componentDescriptionMap.functional}
-          </label>
-        </div>
-        <div className={radioContainerClass}>
-          <label>
+            <label htmlFor="radioInput--functional">
+              {componentShortDescriptionMap.functional}
+            </label>
+          </div>
+          <div
+            className={`${radioContainerClass}${
+              this.isGenericHooksComponent() ? ' radioContainer--checked' : ''
+            }`}
+          >
             <input
+              id="radioInput--hooks"
               type="radio"
               value="hooks"
               checked={this.isGenericHooksComponent()}
               onChange={this.handleChangeComponent('hooks')}
               disabled={syntaxError}
             />
-            {componentDescriptionMap.hooks}
-          </label>
+            <label htmlFor="radioInput--hooks">
+              {componentShortDescriptionMap.hooks}
+            </label>
+          </div>
         </div>
-        <div className={checkboxContainerClass}>
-          <label>
-            <input
-              type="checkbox"
-              value="hooksMemo"
-              checked={this.isHooksMemoComponent()}
-              onChange={this.handleChangeComponent('hooksMemo')}
-              disabled={!this.isGenericHooksComponent() || syntaxError}
-            />
-            {componentDescriptionMap.hooksMemo}
-          </label>
-        </div>
-        <div className={checkboxContainerClass}>
-          <label>
-            <input
-              type="checkbox"
-              value="hooksFunction"
-              checked={this.isHooksFunctionComponent()}
-              onChange={this.handleChangeComponent('hooksFunction')}
-              disabled={!this.isGenericHooksComponent() || syntaxError}
-            />
-            {componentDescriptionMap.hooksFunction}
-          </label>
-        </div>
-        <div className={checkboxContainerClass}>
-          <label>
-            <input
-              type="checkbox"
-              value="hooksRef"
-              checked={this.isHooksRefComponent()}
-              onChange={this.handleChangeComponent('hooksRef')}
-              disabled={!this.isGenericHooksComponent() || syntaxError}
-            />
-            {componentDescriptionMap.hooksRef}
-          </label>
+        <div className="benchmarkCode">
+          {this.isGenericHooksComponent() && (
+            <div className="hooksComponentSelectContainer">
+              <div
+                className={`${memoRadioContainerClass}${
+                  this.isHooksComponent() ? ' memoRadioContainer--checked' : ''
+                }`}
+                id="memoRadioContainer--naive"
+              >
+                <input
+                  id="checkboxInput--naive"
+                  type="radio"
+                  value="hooks"
+                  checked={this.isHooksComponent()}
+                  onChange={this.handleChangeComponent('hooks')}
+                  disabled={!this.isGenericHooksComponent() || syntaxError}
+                />
+                <label htmlFor="checkboxInput--naive">Naive</label>
+              </div>
+              <div
+                className={`${memoRadioContainerClass}${
+                  this.isHooksMemoComponent()
+                    ? ' memoRadioContainer--checked'
+                    : ''
+                }`}
+                id="memoRadioContainer--memo"
+              >
+                <input
+                  id="checkboxInput--memo"
+                  type="radio"
+                  value="hooksMemo"
+                  checked={this.isHooksMemoComponent()}
+                  onChange={this.handleChangeComponent('hooksMemo')}
+                  disabled={!this.isGenericHooksComponent() || syntaxError}
+                />
+                <label htmlFor="checkboxInput--memo">
+                  {componentShortDescriptionMap.hooksMemo}
+                </label>
+              </div>
+              <div
+                className={`${memoRadioContainerClass}${
+                  this.isHooksFunctionComponent()
+                    ? ' memoRadioContainer--checked'
+                    : ''
+                }`}
+                id="memoRadioContainer--function"
+              >
+                <input
+                  id="checkboxInput--function"
+                  type="radio"
+                  value="hooksFunction"
+                  checked={this.isHooksFunctionComponent()}
+                  onChange={this.handleChangeComponent('hooksFunction')}
+                  disabled={!this.isGenericHooksComponent() || syntaxError}
+                />
+                <label htmlFor="checkboxInput--function">
+                  {componentShortDescriptionMap.hooksFunction}
+                </label>
+              </div>
+              <div
+                className={`${memoRadioContainerClass}${
+                  this.isHooksRefComponent()
+                    ? ' memoRadioContainer--checked'
+                    : ''
+                }`}
+                id="memoRadioContainer--ref"
+              >
+                <input
+                  id="checkboxInput--ref"
+                  type="radio"
+                  value="hooksRef"
+                  checked={this.isHooksRefComponent()}
+                  onChange={this.handleChangeComponent('hooksRef')}
+                  disabled={!this.isGenericHooksComponent() || syntaxError}
+                />
+                <label htmlFor="checkboxInput--ref">
+                  {componentShortDescriptionMap.hooksRef}
+                </label>
+              </div>
+            </div>
+          )}
+          {this.renderBenchmarkCode()}
         </div>
       </React.Fragment>
     );
   };
 
-  renderGoButton = () => {
-    const { syntaxError, component } = this.state;
+  renderRunButton = () => {
+    const { component } = this.state;
+    if (!component) return null;
     return (
-      <button
-        onClick={this.handleClickRunBenchmark}
-        disabled={syntaxError || !component}
-      >
-        Run benchmark!
+      <button onClick={this.handleClickRunBenchmark} className="runButton">
+        Run Benchmark!
       </button>
     );
   };
@@ -393,7 +462,7 @@ class App extends React.Component {
       component,
     } = this.state;
 
-    const componentDescription = componentDescriptionMap[component];
+    const componentDescription = componentFullDescriptionMap[component];
     return (
       !runBenchmark &&
       Boolean(startTime) &&
@@ -427,11 +496,10 @@ class App extends React.Component {
           {this.renderErrors()}
           {this.renderArgumentInputs()}
           {this.renderOptions()}
-          {this.renderGoButton()}
+          {this.renderRunButton()}
         </form>
         {this.renderBenchmark()}
         {this.renderResults()}
-        {this.renderBenchmarkCode()}
       </>
     );
   }
