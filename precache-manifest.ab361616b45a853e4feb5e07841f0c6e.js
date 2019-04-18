@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/stress-hooks/static/css/main.ad179a4f.chunk.css"
   },
   {
-    "revision": "00148eca86d6c0ccfdcb9f600ae79feb",
+    "revision": "0bd48e041aa17dc1f9dddd302acb5f6e",
     "url": "/stress-hooks/index.html"
   }
 ];
