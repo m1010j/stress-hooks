@@ -1,5 +1,6 @@
 import React from 'react';
 import Editor from 'react-simple-code-editor';
+import debounce from 'lodash/debounce';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
@@ -24,6 +25,8 @@ import {
 import defaultBenchmark from './utils/defaultBenchmark';
 import retrieveArrowArguments from './utils/retrieveArrowArguments';
 import './App.css';
+
+const space = '\u00A0';
 
 const componentMap = {
   class: ClassComponent,
@@ -93,6 +96,7 @@ class App extends React.Component {
       syntaxError: null,
       runtimeError: null,
     };
+    this.handleUpdateBenchmark = debounce(this.handleUpdateBenchmark, 300);
   }
 
   catchRuntimeError = errorMessage => {
@@ -104,10 +108,12 @@ class App extends React.Component {
   };
 
   handleChangeBenchmark = value => {
-    this.setState({ benchmarkString: value });
+    // this.setState({ benchmarkString: value }, this.handleUpdateBenchmark);
+    this.setState({ benchmarkString: value }, this.handleUpdateBenchmark);
   };
 
   handleUpdateBenchmark = () => {
+    console.log('hi');
     try {
       let benchmark;
       /* eslint-disable no-eval */
@@ -213,7 +219,6 @@ class App extends React.Component {
           highlight={code => highlight(code, languages.js)}
           padding={10}
           className="Editor"
-          onBlur={this.handleUpdateBenchmark}
         />
       </React.Fragment>
     );
@@ -249,41 +254,60 @@ class App extends React.Component {
         benchmarkArguments = retrieveArrowArguments(benchmarkString);
       }
     }
-    const benchmarkArgumentInputs = benchmarkArguments.map((argument, idx) => (
-      <React.Fragment key={idx}>
-        <label htmlFor={`benchmarkArgument_${idx}`}>{argument} = </label>
+    const benchmarkArgumentInputs = benchmarkArguments.map((argument, idx) => {
+      const benchmarkArgumentInputItemClassName = `benchmarkArgumentInputItem${
+        benchmarkArguments.length > 1
+          ? ' benchmarkArgumentInputItem--multipleArgs'
+          : ''
+      }${idx % 3 === 2 ? ' benchmarkArgumentInputItem--lastInRow' : ''}`;
+
+      return (
+        <div className={benchmarkArgumentInputItemClassName} key={idx}>
+          <label htmlFor={`benchmarkArgument_${idx}`}>
+            {argument}
+            {space}={space}
+          </label>
+          <input
+            id={`benchmarkArgument_${idx}`}
+            name={argument}
+            type="text"
+            value={args[idx]}
+            onChange={this.handleChangeArgument(idx)}
+            disabled={syntaxError}
+          />
+        </div>
+      );
+    });
+
+    const totalRendersContainerClassName = `totalRendersContainer${
+      benchmarkArguments.length === 2 ? ' totalRendersContainer--twoArgs' : ''
+    }`;
+    const totalRendersContainer = (
+      <div className={totalRendersContainerClassName}>
+        <label htmlFor="totalRendersInput">
+          Total number of renders:{space}
+          {space}
+        </label>
         <input
-          id={`benchmarkArgument_${idx}`}
-          name={argument}
-          type="text"
-          value={args[idx]}
-          onChange={this.handleChangeArgument(idx)}
+          id="totalRendersInput"
+          name="total number of renders"
+          type="number"
+          value={totalRenders}
+          onChange={this.handleChangeTotalRenders}
           disabled={syntaxError}
         />
-        <br />
-      </React.Fragment>
-    ));
+      </div>
+    );
     return (
       <React.Fragment>
         <p className="p__parameters">
           2. Select parameters (or use the ones provided)
         </p>
         <div className="parametersContainer">
-          <div className="benchmarkArgumentInputsContainer">
-            {benchmarkArgumentInputs}
-          </div>
-          <div className="totalRendersContainer">
-            <label htmlFor="totalRendersInput">Total number of renders: </label>
-            <input
-              id="totalRendersInput"
-              name="total number of renders"
-              type="number"
-              value={totalRenders}
-              onChange={this.handleChangeTotalRenders}
-              disabled={syntaxError}
-            />
-          </div>
+          {benchmarkArgumentInputs}
+          {benchmarkArguments.length < 3 && totalRendersContainer}
         </div>
+        {benchmarkArguments.length > 2 && totalRendersContainer}
       </React.Fragment>
     );
   };

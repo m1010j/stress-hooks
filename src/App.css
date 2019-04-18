@@ -10,14 +10,14 @@ body {
 .h1__title {
   text-align: center;
   font-size: 49px;
-  color: #fff586;
+  color: #fffd73;
 }
 
 .benchmarkEditor__label,
 .p__parameters,
 .p__componentSelect,
 .runButton {
-  border-bottom: 3px solid #fff586;
+  border-bottom: 3px solid #fffd73;
   margin: 15px 0 6px 0;
   font-size: 20px;
 }
@@ -32,49 +32,70 @@ body {
   width: 100%;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 
-.benchmarkArgumentInputsContainer,
-.totalRendersContainer {
-  width: 50%;
+.parametersContainer {
+  width: 100%;
 }
 
-.benchmarkArgumentInputsContainer label,
+.parametersContainer,
+.totalRendersContainer,
+.benchmarkArgumentInputItem {
+  box-sizing: border-box;
+}
+
+.parametersContainer label,
 .totalRendersContainer label,
-.benchmarkArgumentInputsContainer input,
+.parametersContainer input,
 .totalRendersContainer input {
   font-size: 16px;
 }
 
-.benchmarkArgumentInputsContainer input {
-  width: 200px;
+.benchmarkArgumentInputItem,
+.totalRendersContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 50%;
 }
 
+.benchmarkArgumentInputItem {
+  padding-right: 3px;
+}
+
+.benchmarkArgumentInputItem--lastInRow {
+  padding-right: 0;
+}
+
+.benchmarkArgumentInputItem--multipleArgs,
+.totalRendersContainer--twoArgs {
+  width: 33.3333333%;
+}
+
+.benchmarkArgumentInputItem input,
 .totalRendersContainer input {
-  width: 145px;
-}
-
-input[type='radio'] {
-  display: none;
-}
-
-input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type='number'] {
-  -moz-appearance: textfield;
-}
-
-input[type='number'],
-input[type='text'] {
+  width: 30px;
+  flex-grow: 1;
+  margin-bottom: 3px;
   color: #eeeeee;
   background-color: #282a36;
   border: none;
   padding: 4px;
-  margin: 4px 0;
+}
+
+.totalRendersContainer input::-webkit-inner-spin-button,
+.totalRendersContainer input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.totalRendersContainer input {
+  -moz-appearance: textfield;
+}
+
+input[type='radio'] {
+  display: none;
 }
 
 .componentSelectContainer {
@@ -129,15 +150,14 @@ input[type='text'] {
 .memoRadioContainer:focus,
 .runButton:hover,
 .runButton:focus {
-  background-color: #e9b183;
-  color: black;
+  background-color: #565e86;
 }
 
 .radioContainer--checked,
 .radioContainer--checked:hover,
 .memoRadioContainer--checked,
 .memoRadioContainer--checked:hover {
-  background-color: #fff586;
+  background-color: #fffd73;
   color: black;
 }
 
@@ -202,11 +222,6 @@ input[type='text'] {
   border-top: none;
   border-left: none;
   border-right: none;
-}
-
-.runButton:hover,
-.runButton:focus {
-  border-bottom: 3px solid #e9b183;
 }
 
 .p--Error {
