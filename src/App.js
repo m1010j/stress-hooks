@@ -6,6 +6,7 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import retrieveArguments from 'retrieve-arguments';
 
+import Modal from './components/Modal';
 import Benchmark from './components/Benchmark';
 import ClassComponent from './components/ClassComponent';
 import FunctionalComponent from './components/FunctionalComponent';
@@ -24,6 +25,7 @@ import {
 } from './utils/sourceCode';
 import defaultBenchmark from './utils/defaultBenchmark';
 import retrieveArrowArguments from './utils/retrieveArrowArguments';
+import numberWithCommas from './utils/numberWithCommas';
 import './App.css';
 
 const space = '\u00A0';
@@ -99,12 +101,30 @@ class App extends React.Component {
     this.handleUpdateBenchmark = debounce(this.handleUpdateBenchmark, 300);
   }
 
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyPress, false);
+  }
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyPress, false);
+  }
+
   catchRuntimeError = errorMessage => {
     this.setState({
       runtimeError: errorMessage,
       runBenchmark: false,
       ...clearedTimes,
     });
+  };
+
+  handleCloseModal = e => {
+    if (e) e.preventDefault();
+    this.setState(clearedTimes);
+  };
+
+  handleKeyPress = e => {
+    if (e.keyCode === 27) {
+      this.handleCloseModal();
+    }
   };
 
   handleChangeBenchmark = value => {
@@ -154,7 +174,7 @@ class App extends React.Component {
     };
   };
 
-  handleClickRunBenchmark = e => {
+  handleRunBenchmark = e => {
     e.preventDefault();
     const { benchmark, args } = this.state;
     try {
@@ -485,7 +505,7 @@ class App extends React.Component {
     const { component } = this.state;
     if (!component) return null;
     return (
-      <button onClick={this.handleClickRunBenchmark} className="runButton">
+      <button onClick={this.handleRunBenchmark} className="runButton">
         4. Run benchmark!
       </button>
     );
@@ -507,6 +527,7 @@ class App extends React.Component {
           args={args}
           totalRenders={totalRenders}
           stopBenchmark={this.stopBenchmark}
+          handleCloseModal={this.handleCloseModal}
         />
       )
     );
@@ -526,11 +547,18 @@ class App extends React.Component {
       !runBenchmark &&
       Boolean(startTime) &&
       Boolean(stopTime) && (
-        <p>
-          Calculating the function {totalRenders} times took the{' '}
-          {componentDescription} {stopTime.getTime() - startTime.getTime()}{' '}
-          milliseconds.
-        </p>
+        <Modal handleCloseModal={this.handleCloseModal}>
+          <h2>Result</h2>
+          <p>
+            It took the {componentDescription}{' '}
+            {numberWithCommas(stopTime.getTime() - startTime.getTime())}{' '}
+            milliseconds to calculate the function {totalRenders} times.
+          </p>
+          <div className="modal__buttonContainer">
+            <button onClick={this.handleRunBenchmark}>Run again</button>
+            <button onClick={this.handleCloseModal}>Close</button>
+          </div>
+        </Modal>
       )
     );
   };

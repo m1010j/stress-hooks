@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Modal from './Modal';
+
 class Benchmark extends React.Component {
   constructor(props) {
     super(props);
@@ -25,8 +27,12 @@ class Benchmark extends React.Component {
   }
 
   render() {
-    const { component: Component, ...rest } = this.props;
-    return <Component renderNumber={this.state.renderNumber} {...rest} />;
+    const { component: Component, handleCloseModal, ...rest } = this.props;
+    return (
+      <Modal handleCloseModal={handleCloseModal}>
+        <Component renderNumber={this.state.renderNumber} {...rest} />
+      </Modal>
+    );
   }
 }
 

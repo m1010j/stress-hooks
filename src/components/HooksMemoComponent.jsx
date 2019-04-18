@@ -6,19 +6,11 @@ function HooksMemoComponent(props) {
   const [result] = useState(calculatedResult);
   return (
     <>
-      <h2>Functional component with Hooks</h2>
-      <table>
-        <tbody>
-          <tr>
-            <td>Result</td>
-            <td>{result}</td>
-          </tr>
-          <tr>
-            <td>Render #</td>
-            <td>{props.renderNumber}</td>
-          </tr>
-        </tbody>
-      </table>
+      <h2>HooksMemoComponent</h2>
+      <div>
+        <p>Result: {result}</p>
+        <p>Render #: {props.renderNumber}</p>
+      </div>
     </>
   );
 }

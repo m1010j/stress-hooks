@@ -9,19 +9,11 @@ function HooksRefComponent(props) {
   const [result] = useState(ref.current);
   return (
     <>
-      <h2>Functional component with Hooks</h2>
-      <table>
-        <tbody>
-          <tr>
-            <td>Result</td>
-            <td>{result}</td>
-          </tr>
-          <tr>
-            <td>Render #</td>
-            <td>{props.renderNumber}</td>
-          </tr>
-        </tbody>
-      </table>
+      <h2>HooksRefComponent</h2>
+      <div>
+        <p>Result: {result}</p>
+        <p>Render #: {props.renderNumber}</p>
+      </div>
     </>
   );
 }

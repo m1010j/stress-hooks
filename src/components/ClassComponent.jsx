@@ -10,19 +10,11 @@ class ClassComponent extends React.Component {
   render() {
     return (
       <>
-        <h2>Class Component</h2>
-        <table>
-          <tbody>
-            <tr>
-              <td>Result</td>
-              <td>{this.state.result}</td>
-            </tr>
-            <tr>
-              <td>Render #</td>
-              <td>{this.props.renderNumber}</td>
-            </tr>
-          </tbody>
-        </table>
+        <h2>ClassComponent</h2>
+        <div>
+          <p>Result: {this.state.result}</p>
+          <p>Render #: {this.props.renderNumber}</p>
+        </div>
       </>
     );
   }

@@ -3,8 +3,98 @@ body {
   color: #eeeeee;
   background-color: #000000;
   padding: 5px;
-  margin: auto;
+  position: relative;
+}
+
+#root {
   width: 660px;
+  margin: auto;
+}
+
+.screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+}
+
+.modal {
+  position: fixed;
+  top: calc(50vh - 150px);
+  left: calc(50vw - 200px);
+  width: 400px;
+  height: 300px;
+  background-color: #282a36;
+  z-index: 3;
+}
+
+.modal h2 {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: #fffd73;
+  color: black;
+  padding: 10px;
+  font-size: 25px;
+  height: 80px;
+}
+
+.modal > p,
+.modal > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 136px;
+  padding: 10px;
+}
+
+.modal > div {
+  height: 200px;
+}
+
+.modal p {
+  font-size: 16px;
+}
+
+.modal .modal__buttonContainer {
+  height: 64px;
+  flex-direction: row;
+  margin: 0;
+  padding: 0;
+}
+
+.modal button {
+  box-sizing: border-box;
+  width: 185px;
+  margin: 10px;
+  font-size: 20px;
+  height: 44px;
+  background-color: #444962;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-bottom: 3px solid #fffd73;
+}
+
+.modal button:first-of-type {
+  margin-right: 5px;
+}
+
+.modal button:last-of-type {
+  margin-left: 5px;
+}
+
+.modal button:hover,
+.modal button:focus {
+  background-color: #565e86;
 }
 
 .h1__title {
