@@ -224,6 +224,39 @@ input[type='radio'] {
   border-right: none;
 }
 
+.radioContainer--disabled,
+.memoRadioContainer--disabled,
+.radioContainer--disabled:hover,
+.memoRadioContainer--disabled:hover,
+.radioContainer--disabled:focus,
+.memoRadioContainer--disabled:focus,
+#totalRendersInput:disabled {
+  background-color: #6c6c6c;
+  color: #515151;
+  cursor: not-allowed;
+}
+
+.radioContainer--disabled label,
+.memoRadioContainer--disabled label {
+  cursor: not-allowed;
+}
+
+.radioContainer--checked.radioContainer--disabled label,
+.memoRadioContainer--checked.memoRadioContainer--disabled label {
+  background-color: #353535;
+}
+
+.p__parameters--disabled,
+.p__componentSelect--disabled {
+  border-bottom: 3px solid #6c6c6c;
+}
+
+.p__parameters--disabled,
+.parametersContainer--disabled,
+.p__componentSelect--disabled {
+  color: #6c6c6c;
+}
+
 .p--Error {
   box-sizing: border-box;
   background-color: #402325;

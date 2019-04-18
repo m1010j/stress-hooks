@@ -300,10 +300,18 @@ class App extends React.Component {
     );
     return (
       <React.Fragment>
-        <p className="p__parameters">
+        <p
+          className={`p__parameters${
+            syntaxError ? ' p__parameters--disabled' : ''
+          }`}
+        >
           2. Select parameters (or use the ones provided)
         </p>
-        <div className="parametersContainer">
+        <div
+          className={`parametersContainer${
+            syntaxError ? ' parametersContainer--disabled' : ''
+          }`}
+        >
           {benchmarkArgumentInputs}
           {benchmarkArguments.length < 3 && totalRendersContainer}
         </div>
@@ -326,7 +334,13 @@ class App extends React.Component {
 
     return (
       <React.Fragment>
-        <p className="p__componentSelect">3. Select component to benchmark</p>
+        <p
+          className={`p__componentSelect${
+            syntaxError ? ' p__componentSelect--disabled' : ''
+          }`}
+        >
+          3. Select component to benchmark
+        </p>
         <div className="componentSelectContainer">
           <div
             className={`${radioContainerClass}${
@@ -461,7 +475,7 @@ class App extends React.Component {
               </div>
             </div>
           )}
-          {this.renderBenchmarkCode()}
+          {!syntaxError && this.renderBenchmarkCode()}
         </div>
       </React.Fragment>
     );
@@ -541,7 +555,7 @@ class App extends React.Component {
           {this.renderErrors()}
           {this.renderParametersSelect()}
           {this.renderComponentSelect()}
-          {this.renderRunButton()}
+          {!this.state.syntaxError && this.renderRunButton()}
         </form>
         {this.renderBenchmark()}
         {this.renderResults()}
