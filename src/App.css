@@ -231,8 +231,8 @@ input[type='radio'] {
   width: 100%;
   position: absolute;
   display: grid;
-  grid-template-columns: auto 4.417rem 0.188rem 4.417rem 0.188rem 4.417rem 0.188rem 4.417rem;
-  grid-template-rows: repeat(1, 3.125rem);
+  grid-template-columns: 27.65rem auto 0.188rem auto 0.188rem auto 0.188rem auto;
+  grid-template-rows: 3.125rem;
   z-index: 1;
 }
 
