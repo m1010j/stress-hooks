@@ -14,7 +14,7 @@ class Benchmark extends React.Component {
   }
 
   increaseRenderNumber() {
-    if (this.state.renderNumber <= this.props.totalRenders) {
+    if (this.state.renderNumber < this.props.totalRenders) {
       this.setState(
         state => ({ renderNumber: state.renderNumber + 1 }),
         () => {

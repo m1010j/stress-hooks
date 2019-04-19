@@ -75,7 +75,13 @@ const genericHooksComponentStrings = new Set([
   'hooks',
 ]);
 
-const clearedTimes = { startTime: null, endTime: null };
+const clearedTimesState = { startTime: null, endTime: null };
+
+const runBenchmarkState = {
+  runBenchmark: true,
+  runValidation: false,
+  runtimeError: null,
+};
 
 /* eslint-disable no-eval */
 let defaultBenchmarkFunction;
@@ -97,8 +103,10 @@ class App extends React.Component {
       benchmarkString: defaultBenchmark,
       syntaxError: null,
       runtimeError: null,
+      runValidation: false,
     };
     this.handleUpdateBenchmark = debounce(this.handleUpdateBenchmark, 300);
+    this.worker = window.Worker ? new Worker('worker.js') : null;
   }
 
   componentDidMount() {
@@ -112,13 +120,13 @@ class App extends React.Component {
     this.setState({
       runtimeError: errorMessage,
       runBenchmark: false,
-      ...clearedTimes,
+      ...clearedTimesState,
     });
   };
 
   handleCloseModal = e => {
     if (e) e.preventDefault();
-    this.setState(clearedTimes);
+    this.setState(clearedTimesState);
   };
 
   handleKeyPress = e => {
@@ -133,7 +141,6 @@ class App extends React.Component {
   };
 
   handleUpdateBenchmark = () => {
-    console.log('hi');
     try {
       let benchmark;
       /* eslint-disable no-eval */
@@ -148,16 +155,19 @@ class App extends React.Component {
   handleChangeArgument = idx => e => {
     const args = this.state.args.slice();
     args.splice(idx, 1, e.currentTarget.value);
-    this.setState({ args, ...clearedTimes });
+    this.setState({ args, ...clearedTimesState });
   };
 
   handleChangeTotalRenders = e => {
-    this.setState({ totalRenders: e.currentTarget.value, ...clearedTimes });
+    this.setState({
+      totalRenders: e.currentTarget.value,
+      ...clearedTimesState,
+    });
   };
 
   handleChangeComponent = component => {
     return () => {
-      this.setState({ component, ...clearedTimes });
+      this.setState({ component, ...clearedTimesState });
     };
   };
 
@@ -167,30 +177,23 @@ class App extends React.Component {
         specializedHooksComponentStrings.has(component) &&
         !e.currentTarget.checked
       ) {
-        this.setState({ component: 'hooks', ...clearedTimes });
+        this.setState({ component: 'hooks', ...clearedTimesState });
       } else {
-        this.setState({ component, ...clearedTimes });
+        this.setState({ component, ...clearedTimesState });
       }
     };
   };
 
   handleRunBenchmark = e => {
     e.preventDefault();
-    const { benchmark, args } = this.state;
-    try {
-      benchmark(...args);
-      this.setState({
-        runBenchmark: true,
-        startTime: new Date(),
-        runtimeError: null,
-      });
-    } catch (error) {
-      this.catchRuntimeError(error.message);
-    }
+    this.setState({ runValidation: true });
   };
 
   stopBenchmark = () => {
-    this.setState({ runBenchmark: false, stopTime: new Date() });
+    const stopTime = new Date();
+    setTimeout(() => {
+      this.setState({ runBenchmark: false, stopTime });
+    }, 1000);
   };
 
   isComponent = component => {
@@ -511,6 +514,50 @@ class App extends React.Component {
     );
   };
 
+  renderValidation = () => {
+    const { benchmark, runValidation, benchmarkString, args } = this.state;
+    if (runValidation) {
+      if (this.worker) {
+        const argsSerialized = JSON.stringify(args);
+        this.worker.postMessage({ benchmarkString, argsSerialized });
+        this.worker.onmessage = e => {
+          setTimeout(() => {
+            const { data } = e;
+            const { runtimeError } = data;
+            if (runtimeError) {
+              this.setState({ runValidation: false }, () => {
+                this.catchRuntimeError(runtimeError);
+              });
+            } else {
+              this.setState({
+                ...runBenchmarkState,
+                startTime: new Date(),
+              });
+            }
+          }, 500);
+        };
+      } else {
+        try {
+          benchmark(...args);
+          this.setState({
+            ...runBenchmarkState,
+            startTime: new Date(),
+          });
+        } catch (error) {
+          this.catchRuntimeError(error.message);
+        }
+      }
+    }
+    return runValidation && this.worker ? (
+      <Modal handleCloseModal={this.handleCloseModal}>
+        <h2>Analyzing</h2>
+        <div>
+          <img src="spinner.svg" alt="Analyzing..." />
+        </div>
+      </Modal>
+    ) : null;
+  };
+
   renderBenchmark = () => {
     const {
       runBenchmark,
@@ -585,6 +632,7 @@ class App extends React.Component {
           {this.renderComponentSelect()}
           {!this.state.syntaxError && this.renderRunButton()}
         </form>
+        {this.renderValidation()}
         {this.renderBenchmark()}
         {this.renderResults()}
       </>
