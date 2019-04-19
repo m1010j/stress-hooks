@@ -5,6 +5,8 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import retrieveArguments from 'retrieve-arguments';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
 import Modal from './components/Modal';
 import Benchmark from './components/Benchmark';
@@ -626,6 +628,14 @@ class App extends React.Component {
     return (
       <>
         <h1 className="h1__title">Stress Testing React Hooks</h1>
+        <div className="div__subtitle">
+          <span>
+            by <a href="https://www.matthiasjenny.com/#home">Matthias Jenny</a>
+          </span>
+          <a href="https://github.com/m1010j/stress-hooks">
+            <FontAwesomeIcon icon={faGithub} />
+          </a>
+        </div>
         <form>
           {this.renderBenchmarkFunction()}
           {this.renderErrors()}

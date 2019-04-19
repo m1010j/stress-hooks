@@ -12,6 +12,7 @@ body {
 #root {
   width: 41.25rem;
   margin: auto;
+  position: relative;
 }
 
 .screen {
@@ -107,6 +108,22 @@ body {
 .h1__title {
   text-align: center;
   font-size: 3.063rem;
+  color: #fffd73;
+  line-height: 1;
+}
+
+.div__subtitle {
+  padding-top: 0.5rem;
+  color: #fffd73;
+  display: flex;
+  justify-content: center;
+}
+
+.div__subtitle span {
+  margin-right: 0.7rem;
+}
+
+.div__subtitle a {
   color: #fffd73;
 }
 
