@@ -67,6 +67,10 @@ body {
   font-size: 1rem;
 }
 
+.modal img {
+  height: 4rem;
+}
+
 .modal .modal__buttonContainer {
   height: 4rem;
   flex-direction: row;
