@@ -134,7 +134,6 @@ class App extends React.Component {
   };
 
   handleChangeBenchmark = value => {
-    // this.setState({ benchmarkString: value }, this.handleUpdateBenchmark);
     this.setState({ benchmarkString: value }, this.handleUpdateBenchmark);
   };
 

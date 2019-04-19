@@ -106,7 +106,7 @@ body {
 
 .h1__title {
   text-align: center;
-  font-size: 3.063rem;
+  font-size: 2.6rem;
   color: #fffd73;
   line-height: 1;
 }
@@ -124,10 +124,6 @@ body {
 
 .div__subtitle a {
   color: #fffd73;
-}
-
-.benchmarkEditor {
-  /* font-size: 0.8817rem !important; */
 }
 
 .benchmarkEditor__label,
