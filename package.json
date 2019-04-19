@@ -1,6 +1,6 @@
 {
   "name": "stress-hooks",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.17",
@@ -33,5 +33,15 @@
     "not ie < 11",
     "not op_mini all"
   ],
-  "homepage": "https://m1010j.github.io/stress-hooks"
+  "homepage": "https://m1010j.github.io/stress-hooks",
+  "main": "App.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m1010j/stress-hooks.git"
+  },
+  "author": "Matthias Jenny",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/m1010j/stress-hooks/issues"
+  }
 }

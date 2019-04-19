@@ -1,68 +1,131 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Stress Testing React Hooks
 
-## Available Scripts
+[Stress Testing React Hooks](https://www.matthiasjenny.com/stress-hooks/) is a benchmark tool for [React Hooks](https://reactjs.org/docs/hooks-intro.html).
 
-In the project directory, you can run:
+## Overview
 
-### `npm start`
+Users can benchmark the following six components with a benchmark function of their choice:
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### `ClassComponent`
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+```jsx
+class ClassComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    const { benchmark, args } = this.props;
+    this.state = { result: benchmark(...args) };
+  }
 
-### `npm test`
+  render() {
+    return (
+      <>
+        <h2>ClassComponent</h2>
+        <div>
+          <p>Result: {this.state.result}</p>
+          <p>Render #: {this.props.renderNumber}</p>
+        </div>
+      </>
+    );
+  }
+}
+```
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### `FunctionalComponent`
 
-### `npm run build`
+```jsx
+function FunctionalComponent(props) {
+  const { benchmark, args } = props;
+  const result = benchmark(...args);
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  return (
+    <>
+      <h2>FunctionalComponent</h2>
+      <div>
+        <p>Result: {result}</p>
+        <p>Render #: {props.renderNumber}</p>
+      </div>
+    </>
+  );
+}
+```
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+### `HooksComponent`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```jsx
+function HooksComponent(props) {
+  const { benchmark, args } = props;
+  const [result] = useState(benchmark(...args));
+  return (
+    <>
+      <h2>HooksComponent</h2>
+      <div>
+        <p>Result: {result}</p>
+        <p>Render #: {props.renderNumber}</p>
+      </div>
+    </>
+  );
+}
+```
 
-### `npm run eject`
+### `HooksMemoComponent`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```jsx
+function HooksMemoComponent(props) {
+  const { benchmark, args } = props;
+  const calculatedResult = useMemo(() => benchmark(...args), props.args);
+  const [result] = useState(calculatedResult);
+  return (
+    <>
+      <h2>HooksMemoComponent</h2>
+      <div>
+        <p>Result: {result}</p>
+        <p>Render #: {props.renderNumber}</p>
+      </div>
+    </>
+  );
+}
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### `HooksFunctionComponent`
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```jsx
+function HooksFunctionComponent(props) {
+  const { benchmark, args } = props;
+  const [result] = useState(() => benchmark(...args));
+  return (
+    <>
+      <h2>HooksFunctionComponent</h2>
+      <div>
+        <p>Result: {result}</p>
+        <p>Render #: {props.renderNumber}</p>
+      </div>
+    </>
+  );
+}
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### `HooksRefComponent`
 
-## Learn More
+```jsx
+function HooksRefComponent(props) {
+  const { benchmark, args } = props;
+  const ref = useRef(null);
+  if (ref.current === null) {
+    ref.current = benchmark(...args);
+  }
+  const [result] = useState(ref.current);
+  return (
+    <>
+      <h2>HooksRefComponent</h2>
+      <div>
+        <p>Result: {result}</p>
+        <p>Render #: {props.renderNumber}</p>
+      </div>
+    </>
+  );
+}
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## [Contributing](./CONTRIBUTING.md)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## [License](./LICENSE)
