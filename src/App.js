@@ -77,12 +77,6 @@ const genericHooksComponentStrings = new Set([
 
 const clearedTimesState = { startTime: null, endTime: null };
 
-const runBenchmarkState = {
-  runBenchmark: true,
-  runValidation: false,
-  runtimeError: null,
-};
-
 /* eslint-disable no-eval */
 let defaultBenchmarkFunction;
 eval(`defaultBenchmarkFunction = ${defaultBenchmark}`);
@@ -187,6 +181,15 @@ class App extends React.Component {
   handleRunBenchmark = e => {
     e.preventDefault();
     this.setState({ runValidation: true });
+  };
+
+  runBenchmarkAfterValidation = () => {
+    this.setState({
+      runBenchmark: true,
+      runValidation: false,
+      runtimeError: null,
+      startTime: new Date(),
+    });
   };
 
   stopBenchmark = () => {
@@ -529,20 +532,14 @@ class App extends React.Component {
                 this.catchRuntimeError(runtimeError);
               });
             } else {
-              this.setState({
-                ...runBenchmarkState,
-                startTime: new Date(),
-              });
+              this.runBenchmarkAfterValidation();
             }
           }, 500);
         };
       } else {
         try {
           benchmark(...args);
-          this.setState({
-            ...runBenchmarkState,
-            startTime: new Date(),
-          });
+          this.runBenchmarkAfterValitation();
         } catch (error) {
           this.catchRuntimeError(error.message);
         }
@@ -587,10 +584,12 @@ class App extends React.Component {
       stopTime,
       totalRenders,
       component,
+      runValidation,
     } = this.state;
 
     const componentDescription = componentFullDescriptionMap[component];
     return (
+      !runValidation &&
       !runBenchmark &&
       Boolean(startTime) &&
       Boolean(stopTime) && (
@@ -602,7 +601,9 @@ class App extends React.Component {
             milliseconds to calculate the function {totalRenders} times.
           </p>
           <div className="modal__buttonContainer">
-            <button onClick={this.handleRunBenchmark}>Run again</button>
+            <button onClick={this.runBenchmarkAfterValidation}>
+              Run again
+            </button>
             <button onClick={this.handleCloseModal}>Close</button>
           </div>
         </Modal>
