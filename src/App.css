@@ -6,7 +6,7 @@ body {
 }
 
 #root {
-  width: 660px;
+  width: 41.25em;
   margin: auto;
 }
 
@@ -24,10 +24,10 @@ body {
 
 .modal {
   position: fixed;
-  top: calc(50vh - 150px);
-  left: calc(50vw - 200px);
-  width: 400px;
-  height: 300px;
+  top: calc(50vh - 9.375em);
+  left: calc(50vw - 12.5em);
+  width: 25em;
+  height: 18.75em;
   background-color: #282a36;
   z-index: 3;
 }
@@ -40,9 +40,9 @@ body {
   width: 100%;
   background-color: #fffd73;
   color: black;
-  padding: 10px;
-  font-size: 25px;
-  height: 80px;
+  padding: 0.625em;
+  font-size: 1.563em;
+  height: 3em;
 }
 
 .modal > p,
@@ -51,20 +51,20 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 136px;
-  padding: 10px;
+  height: 8.5em;
+  padding: 0.625em;
 }
 
 .modal > div {
-  height: 200px;
+  height: 12.5em;
 }
 
 .modal p {
-  font-size: 16px;
+  font-size: 1em;
 }
 
 .modal .modal__buttonContainer {
-  height: 64px;
+  height: 4em;
   flex-direction: row;
   margin: 0;
   padding: 0;
@@ -72,23 +72,23 @@ body {
 
 .modal button {
   box-sizing: border-box;
-  width: 185px;
-  margin: 10px;
-  font-size: 20px;
-  height: 44px;
+  width: 11.563em;
+  margin: 0.625em;
+  font-size: 1.25em;
+  height: 2.75em;
   background-color: #444962;
   color: white;
   border: none;
   cursor: pointer;
-  border-bottom: 3px solid #fffd73;
+  border-bottom: 0.188em solid #fffd73;
 }
 
 .modal button:first-of-type {
-  margin-right: 5px;
+  margin-right: 0.313em;
 }
 
 .modal button:last-of-type {
-  margin-left: 5px;
+  margin-left: 0.313em;
 }
 
 .modal button:hover,
@@ -98,7 +98,7 @@ body {
 
 .h1__title {
   text-align: center;
-  font-size: 49px;
+  font-size: 3.063em;
   color: #fffd73;
 }
 
@@ -106,9 +106,9 @@ body {
 .p__parameters,
 .p__componentSelect,
 .runButton {
-  border-bottom: 3px solid #fffd73;
-  margin: 15px 0 6px 0;
-  font-size: 20px;
+  border-bottom: 0.188em solid #fffd73;
+  margin: 0.938em 0 0.375em 0;
+  font-size: 1.25em;
 }
 
 .benchmarkEditor__label,
@@ -138,7 +138,7 @@ body {
 .totalRendersContainer label,
 .parametersContainer input,
 .totalRendersContainer input {
-  font-size: 16px;
+  font-size: 1em;
 }
 
 .benchmarkArgumentInputItem,
@@ -150,7 +150,7 @@ body {
 }
 
 .benchmarkArgumentInputItem {
-  padding-right: 3px;
+  padding-right: 0.188em;
 }
 
 .benchmarkArgumentInputItem--lastInRow {
@@ -164,13 +164,13 @@ body {
 
 .benchmarkArgumentInputItem input,
 .totalRendersContainer input {
-  width: 30px;
+  width: 1.875em;
   flex-grow: 1;
-  margin-bottom: 3px;
+  margin-bottom: 0.188em;
   color: #eeeeee;
   background-color: #282a36;
   border: none;
-  padding: 4px;
+  padding: 0.25em;
 }
 
 .totalRendersContainer input::-webkit-inner-spin-button,
@@ -191,7 +191,7 @@ input[type='radio'] {
   display: flex;
   width: 100%;
   flex-direction: row;
-  height: 50px;
+  height: 3.125em;
   box-sizing: border-box;
 }
 
@@ -203,8 +203,8 @@ input[type='radio'] {
   width: 100%;
   position: absolute;
   display: grid;
-  grid-template-columns: auto 70.6666666667px 3px 70.6666666667px 3px 70.6666666667px 3px 70.6666666667px;
-  grid-template-rows: repeat(1, 50px);
+  grid-template-columns: auto 4.417em 0.188em 4.417em 0.188em 4.417em 0.188em 4.417em;
+  grid-template-rows: repeat(1, 3.125em);
   z-index: 1;
 }
 
@@ -224,8 +224,8 @@ input[type='radio'] {
 
 .radioContainer {
   width: 33.333333%;
-  height: calc(100%-3px);
-  margin-bottom: 3px;
+  height: calc(100%-0.188em);
+  margin-bottom: 0.188em;
 }
 
 .radioContainer label,
@@ -256,11 +256,11 @@ input[type='radio'] {
 }
 
 .radioContainer:first-of-type {
-  margin-right: 3px;
+  margin-right: 0.188em;
 }
 
 .radioContainer:last-of-type {
-  margin-left: 3px;
+  margin-left: 0.188em;
 }
 
 .radioContainer label {
@@ -302,9 +302,9 @@ input[type='radio'] {
 .runButton {
   box-sizing: border-box;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 1.25em;
   width: 100%;
-  height: 47px;
+  height: 2.938em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -337,7 +337,7 @@ input[type='radio'] {
 
 .p__parameters--disabled,
 .p__componentSelect--disabled {
-  border-bottom: 3px solid #6c6c6c;
+  border-bottom: 0.188em solid #6c6c6c;
 }
 
 .p__parameters--disabled,
@@ -349,14 +349,14 @@ input[type='radio'] {
 .p--Error {
   box-sizing: border-box;
   background-color: #402325;
-  border: 1px solid #cc3d3d;
-  padding: 4px;
-  margin: 5px 0 0 0;
+  border: 0.063em solid #cc3d3d;
+  padding: 0.25em;
+  margin: 0.313em 0 0 0;
 }
 
 .Editor,
 pre {
-  width: 660px;
+  width: 41.25em;
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -396,7 +396,7 @@ pre[class*='language-'],
 
 /* Code blocks */
 pre[class*='language-'] {
-  padding: 10px;
+  padding: 0.625em;
   margin: 0;
   overflow: auto;
 }
