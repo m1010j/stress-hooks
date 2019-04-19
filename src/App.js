@@ -77,6 +77,8 @@ const genericHooksComponentStrings = new Set([
   'hooks',
 ]);
 
+const allComponentStrings = new Set(Object.keys(componentMap));
+
 const clearedTimesState = { startTime: null, endTime: null };
 
 /* eslint-disable no-eval */
@@ -233,6 +235,10 @@ class App extends React.Component {
     return genericHooksComponentStrings.has(this.state.component);
   };
 
+  isComponentSelected = () => {
+    return allComponentStrings.has(this.state.component);
+  };
+
   renderBenchmarkFunction = () => {
     const { benchmarkString } = this.state;
     return (
@@ -360,6 +366,10 @@ class App extends React.Component {
         : ''
     }`;
 
+    const componentSelectContainerClass = `componentSelectContainer${
+      this.isComponentSelected() ? ' componentSelectContainer--selected' : ''
+    }`;
+
     return (
       <React.Fragment>
         <p
@@ -369,7 +379,7 @@ class App extends React.Component {
         >
           3. Select component to benchmark
         </p>
-        <div className="componentSelectContainer">
+        <div className={componentSelectContainerClass}>
           <div
             className={`${radioContainerClass}${
               this.isClassComponent() ? ' radioContainer--checked' : ''
