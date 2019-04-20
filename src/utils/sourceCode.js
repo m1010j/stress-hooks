@@ -81,12 +81,11 @@ export const refHooksComponentCode = `function RefHooksComponent(props) {
   if (ref.current === null) {
     ref.current = benchmark(...args);
   }
-  const [result] = useState(ref.current);
   return (
     <>
       <h2>RefHooksComponent</h2>
       <div>
-        <p>Result: {result}</p>
+        <p>Result: {ref.current}</p>
         <p>Render #: {props.renderNumber}</p>
       </div>
     </>
