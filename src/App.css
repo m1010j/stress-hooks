@@ -83,7 +83,8 @@ body {
   box-sizing: border-box;
   width: 11.563rem;
   margin: 0.625rem;
-  font-size: 1.25rem;
+  font-size: 1rem;
+  font-weight: 700;
   height: 2.75rem;
   background-color: #444962;
   color: white;
