@@ -119,12 +119,16 @@ body {
   justify-content: center;
 }
 
-.div__subtitle span {
+.authorLink {
   margin-right: 0.7rem;
 }
 
 .div__subtitle a {
   color: #fffd73;
+}
+
+.mediumLink {
+  margin-left: 0.7rem;
 }
 
 .benchmarkEditor__label,

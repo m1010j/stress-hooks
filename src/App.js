@@ -313,11 +313,17 @@ class App extends React.Component {
       <>
         <h1 className="h1__title">Stress Testing React Hooks</h1>
         <div className="div__subtitle">
-          <span>
+          <span className="authorLink">
             by <a href="https://www.matthiasjenny.com/#home">Matthias Jenny</a>
           </span>
           <a href="https://github.com/m1010j/stress-hooks">
             <FontAwesomeIcon icon={faGithub} />
+          </a>
+          <a
+            className="mediumLink"
+            href="https://medium.com/@_m1010j_/how-to-avoid-this-react-hooks-performance-pitfall-28770ad9abe0"
+          >
+            Discussion
           </a>
         </div>
         <form>
