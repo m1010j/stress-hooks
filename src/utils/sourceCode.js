@@ -49,8 +49,7 @@ export const naiveHooksComponentCode = `function NaiveHooksComponent(props) {
 
 export const memoHooksComponentCode = `function MemoHooksComponent(props) {
   const { benchmark, args } = props;
-  const calculatedResult = useMemo(() => benchmark(...args), props.args);
-  const [result] = useState(calculatedResult);
+  const result = useMemo(() => benchmark(...args), args);
   return (
     <>
       <h2>MemoHooksComponent</h2>
