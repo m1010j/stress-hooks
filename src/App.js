@@ -627,7 +627,6 @@ class App extends React.Component {
 
   renderBenchmarkCode = () => {
     const { component } = this.state;
-    console.log({ component });
     return (
       Boolean(component) && (
         <React.Fragment>
