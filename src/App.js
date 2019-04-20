@@ -612,7 +612,7 @@ class App extends React.Component {
           <p>
             It took the {componentDescription}{' '}
             {numberWithCommas(stopTime.getTime() - startTime.getTime())}{' '}
-            milliseconds to calculate the function {totalRenders} times.
+            milliseconds to render {totalRenders} times.
           </p>
           <div className="modal__buttonContainer">
             <button onClick={this.runBenchmarkAfterValidation}>
