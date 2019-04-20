@@ -35,7 +35,7 @@ class App extends React.Component {
       component: null,
       runBenchmark: false,
       hooksSelected: false,
-      args: [35],
+      args: [32],
       startTime: null,
       stopTime: null,
       totalRenders: 10,
@@ -200,7 +200,7 @@ class App extends React.Component {
     }`;
     return (
       <button onClick={this.handleRunBenchmark} className={runButtonClassName}>
-        4. Run benchmark!
+        4. Run benchmark
       </button>
     );
   };
