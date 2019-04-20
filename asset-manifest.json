@@ -1,13 +1,13 @@
 {
-  "main.css": "/stress-hooks/static/css/main.6d150961.chunk.css",
-  "main.js": "/stress-hooks/static/js/main.3fe9ae57.chunk.js",
-  "main.js.map": "/stress-hooks/static/js/main.3fe9ae57.chunk.js.map",
+  "main.css": "/stress-hooks/static/css/main.7396739b.chunk.css",
+  "main.js": "/stress-hooks/static/js/main.d084bcb6.chunk.js",
+  "main.js.map": "/stress-hooks/static/js/main.d084bcb6.chunk.js.map",
   "runtime~main.js": "/stress-hooks/static/js/runtime~main.ccb4be0d.js",
   "runtime~main.js.map": "/stress-hooks/static/js/runtime~main.ccb4be0d.js.map",
-  "static/js/2.39b6198e.chunk.js": "/stress-hooks/static/js/2.39b6198e.chunk.js",
-  "static/js/2.39b6198e.chunk.js.map": "/stress-hooks/static/js/2.39b6198e.chunk.js.map",
+  "static/js/2.7ace3535.chunk.js": "/stress-hooks/static/js/2.7ace3535.chunk.js",
+  "static/js/2.7ace3535.chunk.js.map": "/stress-hooks/static/js/2.7ace3535.chunk.js.map",
   "index.html": "/stress-hooks/index.html",
-  "precache-manifest.496a1cfbc42578c9cf1aeb9f21661cf3.js": "/stress-hooks/precache-manifest.496a1cfbc42578c9cf1aeb9f21661cf3.js",
+  "precache-manifest.5395e1e888fc724a01f85454203c7c8c.js": "/stress-hooks/precache-manifest.5395e1e888fc724a01f85454203c7c8c.js",
   "service-worker.js": "/stress-hooks/service-worker.js",
-  "static/css/main.6d150961.chunk.css.map": "/stress-hooks/static/css/main.6d150961.chunk.css.map"
+  "static/css/main.7396739b.chunk.css.map": "/stress-hooks/static/css/main.7396739b.chunk.css.map"
 }
