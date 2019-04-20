@@ -382,6 +382,15 @@ input[type='radio'] {
   margin: 0.313rem 0 0 0;
 }
 
+.benchmarkCode pre div span.token.plain,
+.benchmarkCode pre div span.token.punctuation {
+  color: #ffffff !important;
+}
+
+.benchmarkCode pre div span.token.function {
+  color: #ff7e7e !important;
+}
+
 .Editor,
 pre {
   width: 41.25rem;
