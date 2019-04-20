@@ -4,81 +4,21 @@ import debounce from 'lodash/debounce';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import retrieveArguments from 'retrieve-arguments';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
 import Modal from './components/Modal';
 import Benchmark from './components/Benchmark';
-import ClassComponent from './components/ClassComponent';
-import FunctionalComponent from './components/FunctionalComponent';
-import NaiveHooksComponent from './components/NaiveHooksComponent';
-import MemoHooksComponent from './components/MemoHooksComponent';
-import FunctionHooksComponent from './components/FunctionHooksComponent';
-import RefHooksComponent from './components/RefHooksComponent';
-import CodeSnippet from './components/CodeSnippet';
+import ComponentSelect from './components/ComponentSelect';
+import ParametersSelect from './components/ParametersSelect';
 import {
-  classComponentCode,
-  functionalComponentCode,
-  naiveHooksComponentCode,
-  memoHooksComponentCode,
-  functionHooksComponentCode,
-  refHooksComponentCode,
-} from './utils/sourceCode';
+  componentMap,
+  componentFullDescriptionMap,
+} from './utils/componentMaps';
+import { specializedHooksComponentStrings } from './utils/stringSets';
 import defaultBenchmark from './utils/defaultBenchmark';
-import retrieveArrowArguments from './utils/retrieveArrowArguments';
 import numberWithCommas from './utils/numberWithCommas';
 import './App.css';
-
-const space = '\u00A0';
-
-const componentMap = {
-  class: ClassComponent,
-  functional: FunctionalComponent,
-  naiveHooks: NaiveHooksComponent,
-  memoHooks: MemoHooksComponent,
-  functionHooks: FunctionHooksComponent,
-  refHooks: RefHooksComponent,
-};
-
-const componentShortDescriptionMap = {
-  class: 'ClassComponent',
-  functional: 'FunctionalComponent',
-  naiveHooks: 'HooksComponent',
-  memoHooks: 'Memo',
-  functionHooks: 'Function',
-  refHooks: 'Ref',
-};
-
-const componentFullDescriptionMap = {
-  ...componentShortDescriptionMap,
-  naiveHooks: 'NaiveHooksComponent',
-  memoHooks: 'MemoHooksComponent',
-  functionHooks: 'FunctionHooksComponent',
-  refHooks: 'RefHooksComponent',
-};
-
-const componentCodeMap = {
-  class: classComponentCode,
-  functional: functionalComponentCode,
-  naiveHooks: naiveHooksComponentCode,
-  memoHooks: memoHooksComponentCode,
-  functionHooks: functionHooksComponentCode,
-  refHooks: refHooksComponentCode,
-};
-
-const specializedHooksComponentStrings = new Set([
-  'memoHooks',
-  'functionHooks',
-  'refHooks',
-]);
-
-const genericHooksComponentStrings = new Set([
-  ...specializedHooksComponentStrings,
-  'naiveHooks',
-]);
-
-const allComponentStrings = new Set(Object.keys(componentMap));
 
 const clearedTimesState = { startTime: null, endTime: null };
 
@@ -203,42 +143,6 @@ class App extends React.Component {
     }, 1000);
   };
 
-  isComponent = component => {
-    return this.state.component === component;
-  };
-
-  isClassComponent = () => {
-    return this.isComponent('class');
-  };
-
-  isFunctionalComponent = () => {
-    return this.isComponent('functional');
-  };
-
-  isNaiveHooksComponent = () => {
-    return this.isComponent('naiveHooks');
-  };
-
-  isMemoHooksComponent = () => {
-    return this.isComponent('memoHooks');
-  };
-
-  isFunctionHooksComponent = () => {
-    return this.isComponent('functionHooks');
-  };
-
-  isRefHooksComponent = () => {
-    return this.isComponent('refHooks');
-  };
-
-  isGenericHooksComponent = () => {
-    return genericHooksComponentStrings.has(this.state.component);
-  };
-
-  isComponentSelected = () => {
-    return allComponentStrings.has(this.state.component);
-  };
-
   renderBenchmarkFunction = () => {
     const { benchmarkString } = this.state;
     return (
@@ -268,255 +172,6 @@ class App extends React.Component {
         {Boolean(runtimeError) && (
           <p className="p--Error">Runtime error: {runtimeError}</p>
         )}
-      </React.Fragment>
-    );
-  };
-
-  renderParametersSelect = () => {
-    const {
-      benchmark,
-      benchmarkString,
-      args,
-      syntaxError,
-      totalRenders,
-    } = this.state;
-    let benchmarkArguments = [];
-    try {
-      benchmarkArguments = retrieveArguments(benchmark);
-    } catch {
-      if (!syntaxError) {
-        benchmarkArguments = retrieveArrowArguments(benchmarkString);
-      }
-    }
-    const benchmarkArgumentInputs = benchmarkArguments.map((argument, idx) => {
-      const benchmarkArgumentInputItemClassName = `benchmarkArgumentInputItem${
-        benchmarkArguments.length > 1
-          ? ' benchmarkArgumentInputItem--multipleArgs'
-          : ''
-      }${idx % 3 === 2 ? ' benchmarkArgumentInputItem--lastInRow' : ''}`;
-
-      return (
-        <div className={benchmarkArgumentInputItemClassName} key={idx}>
-          <label htmlFor={`benchmarkArgument_${idx}`}>
-            {argument}
-            {space}={space}
-          </label>
-          <input
-            id={`benchmarkArgument_${idx}`}
-            name={argument}
-            type="text"
-            value={args[idx]}
-            onChange={this.handleChangeArgument(idx)}
-            disabled={syntaxError}
-          />
-        </div>
-      );
-    });
-
-    const totalRendersContainerClassName = `totalRendersContainer${
-      benchmarkArguments.length === 2 ? ' totalRendersContainer--twoArgs' : ''
-    }`;
-    const totalRendersContainer = (
-      <div className={totalRendersContainerClassName}>
-        <label htmlFor="totalRendersInput">
-          Total number of renders:{space}
-          {space}
-        </label>
-        <input
-          id="totalRendersInput"
-          name="total number of renders"
-          type="number"
-          value={totalRenders}
-          onChange={this.handleChangeTotalRenders}
-          disabled={syntaxError}
-        />
-      </div>
-    );
-    return (
-      <React.Fragment>
-        <p
-          className={`p__parameters${
-            syntaxError ? ' p__parameters--disabled' : ''
-          }`}
-        >
-          2. Select parameters (or use the ones provided)
-        </p>
-        <div
-          className={`parametersContainer${
-            syntaxError ? ' parametersContainer--disabled' : ''
-          }`}
-        >
-          {benchmarkArgumentInputs}
-          {benchmarkArguments.length < 3 && totalRendersContainer}
-        </div>
-        {benchmarkArguments.length > 2 && totalRendersContainer}
-      </React.Fragment>
-    );
-  };
-
-  renderComponentSelect = () => {
-    const { syntaxError } = this.state;
-
-    const radioContainerClass = `radioContainer${
-      syntaxError ? ' radioContainer--disabled' : ''
-    }`;
-    const memoRadioContainerClass = `memoRadioContainer${
-      !this.isGenericHooksComponent() || syntaxError
-        ? ' memoRadioContainer--disabled'
-        : ''
-    }`;
-
-    const componentSelectContainerClass = `componentSelectContainer${
-      this.isComponentSelected() ? ' componentSelectContainer--selected' : ''
-    }`;
-
-    return (
-      <React.Fragment>
-        <p
-          className={`p__componentSelect${
-            syntaxError ? ' p__componentSelect--disabled' : ''
-          }`}
-        >
-          3. Select component to benchmark
-        </p>
-        <div className={componentSelectContainerClass}>
-          <div
-            className={`${radioContainerClass}${
-              this.isClassComponent() ? ' radioContainer--checked' : ''
-            }`}
-          >
-            <input
-              id="radioInput--class"
-              type="radio"
-              value="class"
-              checked={this.isClassComponent()}
-              onChange={this.handleChangeComponent('class')}
-              disabled={syntaxError}
-            />
-            <label htmlFor="radioInput--class">
-              {componentShortDescriptionMap.class}
-            </label>
-          </div>
-          <div
-            className={`${radioContainerClass}${
-              this.isFunctionalComponent() ? ' radioContainer--checked' : ''
-            }`}
-          >
-            <input
-              id="radioInput--functional"
-              type="radio"
-              value="functional"
-              checked={this.isFunctionalComponent()}
-              onChange={this.handleChangeComponent('functional')}
-              disabled={syntaxError}
-            />
-            <label htmlFor="radioInput--functional">
-              {componentShortDescriptionMap.functional}
-            </label>
-          </div>
-          <div
-            className={`${radioContainerClass}${
-              this.isGenericHooksComponent() ? ' radioContainer--checked' : ''
-            }`}
-          >
-            <input
-              id="radioInput--hooks"
-              type="radio"
-              value="naiveHooks"
-              checked={this.isGenericHooksComponent()}
-              onChange={this.handleChangeComponent('naiveHooks')}
-              disabled={syntaxError}
-            />
-            <label htmlFor="radioInput--hooks">
-              {componentShortDescriptionMap.naiveHooks}
-            </label>
-          </div>
-        </div>
-        <div className="benchmarkCode">
-          {this.isGenericHooksComponent() && (
-            <div className="hooksComponentSelectContainer">
-              <div
-                className={`${memoRadioContainerClass}${
-                  this.isNaiveHooksComponent()
-                    ? ' memoRadioContainer--checked'
-                    : ''
-                }`}
-                id="memoRadioContainer--naive"
-              >
-                <input
-                  id="checkboxInput--naive"
-                  type="radio"
-                  value="naiveHooks"
-                  checked={this.isNaiveHooksComponent()}
-                  onChange={this.handleChangeComponent('naiveHooks')}
-                  disabled={!this.isGenericHooksComponent() || syntaxError}
-                />
-                <label htmlFor="checkboxInput--naive">Naive</label>
-              </div>
-              <div
-                className={`${memoRadioContainerClass}${
-                  this.isMemoHooksComponent()
-                    ? ' memoRadioContainer--checked'
-                    : ''
-                }`}
-                id="memoRadioContainer--memo"
-              >
-                <input
-                  id="checkboxInput--memo"
-                  type="radio"
-                  value="memoHooks"
-                  checked={this.isMemoHooksComponent()}
-                  onChange={this.handleChangeComponent('memoHooks')}
-                  disabled={!this.isGenericHooksComponent() || syntaxError}
-                />
-                <label htmlFor="checkboxInput--memo">
-                  {componentShortDescriptionMap.memoHooks}
-                </label>
-              </div>
-              <div
-                className={`${memoRadioContainerClass}${
-                  this.isFunctionHooksComponent()
-                    ? ' memoRadioContainer--checked'
-                    : ''
-                }`}
-                id="memoRadioContainer--function"
-              >
-                <input
-                  id="checkboxInput--function"
-                  type="radio"
-                  value="functionHooks"
-                  checked={this.isFunctionHooksComponent()}
-                  onChange={this.handleChangeComponent('functionHooks')}
-                  disabled={!this.isGenericHooksComponent() || syntaxError}
-                />
-                <label htmlFor="checkboxInput--function">
-                  {componentShortDescriptionMap.functionHooks}
-                </label>
-              </div>
-              <div
-                className={`${memoRadioContainerClass}${
-                  this.isRefHooksComponent()
-                    ? ' memoRadioContainer--checked'
-                    : ''
-                }`}
-                id="memoRadioContainer--ref"
-              >
-                <input
-                  id="checkboxInput--ref"
-                  type="radio"
-                  value="refHooks"
-                  checked={this.isRefHooksComponent()}
-                  onChange={this.handleChangeComponent('refHooks')}
-                  disabled={!this.isGenericHooksComponent() || syntaxError}
-                />
-                <label htmlFor="checkboxInput--ref">
-                  {componentShortDescriptionMap.refHooks}
-                </label>
-              </div>
-            </div>
-          )}
-          {!syntaxError && this.renderBenchmarkCode()}
-        </div>
       </React.Fragment>
     );
   };
@@ -625,18 +280,16 @@ class App extends React.Component {
     );
   };
 
-  renderBenchmarkCode = () => {
-    const { component } = this.state;
-    return (
-      Boolean(component) && (
-        <React.Fragment>
-          <CodeSnippet code={componentCodeMap[component]} />
-        </React.Fragment>
-      )
-    );
-  };
-
   render() {
+    const {
+      args,
+      benchmark,
+      benchmarkString,
+      component,
+      syntaxError,
+      totalRenders,
+    } = this.state;
+
     return (
       <>
         <h1 className="h1__title">Stress Testing React Hooks</h1>
@@ -651,8 +304,20 @@ class App extends React.Component {
         <form>
           {this.renderBenchmarkFunction()}
           {this.renderErrors()}
-          {this.renderParametersSelect()}
-          {this.renderComponentSelect()}
+          <ParametersSelect
+            args={args}
+            benchmark={benchmark}
+            benchmarkString={benchmarkString}
+            handleChangeArgument={this.handleChangeArgument}
+            handleChangeTotalRenders={this.handleChangeTotalRenders}
+            syntaxError={syntaxError}
+            totalRenders={totalRenders}
+          />
+          <ComponentSelect
+            syntaxError={syntaxError}
+            component={component}
+            handleChangeComponent={this.handleChangeComponent}
+          />
           {!this.state.syntaxError && this.renderRunButton()}
         </form>
         {this.renderValidation()}
