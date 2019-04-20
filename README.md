@@ -52,7 +52,7 @@ function FunctionalComponent(props) {
 ### `HooksComponent`
 
 ```jsx
-function HooksComponent(props) {
+function NaiveHooksComponent(props) {
   const { benchmark, args } = props;
   const [result] = useState(benchmark(...args));
   return (
@@ -67,16 +67,16 @@ function HooksComponent(props) {
 }
 ```
 
-### `HooksMemoComponent`
+### `MemoHooksComponent`
 
 ```jsx
-function HooksMemoComponent(props) {
+function MemoHooksComponent(props) {
   const { benchmark, args } = props;
   const calculatedResult = useMemo(() => benchmark(...args), props.args);
   const [result] = useState(calculatedResult);
   return (
     <>
-      <h2>HooksMemoComponent</h2>
+      <h2>MemoHooksComponent</h2>
       <div>
         <p>Result: {result}</p>
         <p>Render #: {props.renderNumber}</p>
@@ -86,15 +86,15 @@ function HooksMemoComponent(props) {
 }
 ```
 
-### `HooksFunctionComponent`
+### `FunctionHooksComponent`
 
 ```jsx
-function HooksFunctionComponent(props) {
+function FunctionHooksComponent(props) {
   const { benchmark, args } = props;
   const [result] = useState(() => benchmark(...args));
   return (
     <>
-      <h2>HooksFunctionComponent</h2>
+      <h2>FunctionHooksComponent</h2>
       <div>
         <p>Result: {result}</p>
         <p>Render #: {props.renderNumber}</p>
@@ -104,10 +104,10 @@ function HooksFunctionComponent(props) {
 }
 ```
 
-### `HooksRefComponent`
+### `RefHooksComponent`
 
 ```jsx
-function HooksRefComponent(props) {
+function RefHooksComponent(props) {
   const { benchmark, args } = props;
   const ref = useRef(null);
   if (ref.current === null) {
@@ -116,7 +116,7 @@ function HooksRefComponent(props) {
   const [result] = useState(ref.current);
   return (
     <>
-      <h2>HooksRefComponent</h2>
+      <h2>RefHooksComponent</h2>
       <div>
         <p>Result: {result}</p>
         <p>Render #: {props.renderNumber}</p>

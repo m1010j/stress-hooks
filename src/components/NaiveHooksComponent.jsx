@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function HooksComponent(props) {
+function NaiveHooksComponent(props) {
   const { benchmark, args } = props;
   const [result] = useState(benchmark(...args));
   return (
@@ -14,4 +14,4 @@ function HooksComponent(props) {
   );
 }
 
-export default HooksComponent;
+export default NaiveHooksComponent;

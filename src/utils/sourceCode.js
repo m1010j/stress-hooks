@@ -33,7 +33,7 @@ export const functionalComponentCode = `function FunctionalComponent(props) {
   );
 }`;
 
-export const hooksComponentCode = `function HooksComponent(props) {
+export const naiveHooksComponentCode = `function NaiveHooksComponent(props) {
   const { benchmark, args } = props;
   const [result] = useState(benchmark(...args));
   return (
@@ -47,13 +47,13 @@ export const hooksComponentCode = `function HooksComponent(props) {
   );
 }`;
 
-export const hooksMemoComponentCode = `function HooksMemoComponent(props) {
+export const memoHooksComponentCode = `function MemoHooksComponent(props) {
   const { benchmark, args } = props;
   const calculatedResult = useMemo(() => benchmark(...args), props.args);
   const [result] = useState(calculatedResult);
   return (
     <>
-      <h2>HooksMemoComponent</h2>
+      <h2>MemoHooksComponent</h2>
       <div>
         <p>Result: {result}</p>
         <p>Render #: {props.renderNumber}</p>
@@ -62,12 +62,12 @@ export const hooksMemoComponentCode = `function HooksMemoComponent(props) {
   );
 }`;
 
-export const hooksFunctionComponentCode = `function HooksFunctionComponent(props) {
+export const functionHooksComponentCode = `function FunctionHooksComponent(props) {
   const { benchmark, args } = props;
   const [result] = useState(() => benchmark(...args));
   return (
     <>
-      <h2>HooksFunctionComponent</h2>
+      <h2>FunctionHooksComponent</h2>
       <div>
         <p>Result: {result}</p>
         <p>Render #: {props.renderNumber}</p>
@@ -76,7 +76,7 @@ export const hooksFunctionComponentCode = `function HooksFunctionComponent(props
   );
 }`;
 
-export const hooksRefComponentCode = `function HooksRefComponent(props) {
+export const refHooksComponentCode = `function RefHooksComponent(props) {
   const { benchmark, args } = props;
   const ref = useRef(null);
   if (ref.current === null) {
@@ -85,7 +85,7 @@ export const hooksRefComponentCode = `function HooksRefComponent(props) {
   const [result] = useState(ref.current);
   return (
     <>
-      <h2>HooksRefComponent</h2>
+      <h2>RefHooksComponent</h2>
       <div>
         <p>Result: {result}</p>
         <p>Render #: {props.renderNumber}</p>

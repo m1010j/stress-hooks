@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-function HooksRefComponent(props) {
+function RefHooksComponent(props) {
   const { benchmark, args } = props;
   const ref = useRef(null);
   if (ref.current === null) {
@@ -9,7 +9,7 @@ function HooksRefComponent(props) {
   const [result] = useState(ref.current);
   return (
     <>
-      <h2>HooksRefComponent</h2>
+      <h2>RefHooksComponent</h2>
       <div>
         <p>Result: {result}</p>
         <p>Render #: {props.renderNumber}</p>
@@ -18,4 +18,4 @@ function HooksRefComponent(props) {
   );
 }
 
-export default HooksRefComponent;
+export default RefHooksComponent;

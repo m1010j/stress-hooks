@@ -12,18 +12,18 @@ import Modal from './components/Modal';
 import Benchmark from './components/Benchmark';
 import ClassComponent from './components/ClassComponent';
 import FunctionalComponent from './components/FunctionalComponent';
-import HooksComponent from './components/HooksComponent';
-import HooksMemoComponent from './components/HooksMemoComponent';
-import HooksFunctionComponent from './components/HooksFunctionComponent';
-import HooksRefComponent from './components/HooksRefComponent';
+import NaiveHooksComponent from './components/NaiveHooksComponent';
+import MemoHooksComponent from './components/MemoHooksComponent';
+import FunctionHooksComponent from './components/FunctionHooksComponent';
+import RefHooksComponent from './components/RefHooksComponent';
 import CodeSnippet from './components/CodeSnippet';
 import {
   classComponentCode,
   functionalComponentCode,
-  hooksComponentCode,
-  hooksMemoComponentCode,
-  hooksFunctionComponentCode,
-  hooksRefComponentCode,
+  naiveHooksComponentCode,
+  memoHooksComponentCode,
+  functionHooksComponentCode,
+  refHooksComponentCode,
 } from './utils/sourceCode';
 import defaultBenchmark from './utils/defaultBenchmark';
 import retrieveArrowArguments from './utils/retrieveArrowArguments';
@@ -35,46 +35,47 @@ const space = '\u00A0';
 const componentMap = {
   class: ClassComponent,
   functional: FunctionalComponent,
-  hooks: HooksComponent,
-  hooksMemo: HooksMemoComponent,
-  hooksFunction: HooksFunctionComponent,
-  hooksRef: HooksRefComponent,
+  naiveHooks: NaiveHooksComponent,
+  memoHooks: MemoHooksComponent,
+  functionHooks: FunctionHooksComponent,
+  refHooks: RefHooksComponent,
 };
 
 const componentShortDescriptionMap = {
   class: 'ClassComponent',
   functional: 'FunctionalComponent',
-  hooks: 'HooksComponent',
-  hooksMemo: 'Memo',
-  hooksFunction: 'Function',
-  hooksRef: 'Ref',
+  naiveHooks: 'HooksComponent',
+  memoHooks: 'Memo',
+  functionHooks: 'Function',
+  refHooks: 'Ref',
 };
 
 const componentFullDescriptionMap = {
   ...componentShortDescriptionMap,
-  hooksMemo: 'HooksMemoComponent',
-  hooksFunction: 'HooksFunctionComponent',
-  hooksRef: 'HooksRefComponent',
+  naiveHooks: 'NaiveHooksComponent',
+  memoHooks: 'MemoHooksComponent',
+  functionHooks: 'FunctionHooksComponent',
+  refHooks: 'RefHooksComponent',
 };
 
 const componentCodeMap = {
   class: classComponentCode,
   functional: functionalComponentCode,
-  hooks: hooksComponentCode,
-  hooksMemo: hooksMemoComponentCode,
-  hooksFunction: hooksFunctionComponentCode,
-  hooksRef: hooksRefComponentCode,
+  naiveHooks: naiveHooksComponentCode,
+  memoHooks: memoHooksComponentCode,
+  functionHooks: functionHooksComponentCode,
+  refHooks: refHooksComponentCode,
 };
 
 const specializedHooksComponentStrings = new Set([
-  'hooksMemo',
-  'hooksFunction',
-  'hooksRef',
+  'memoHooks',
+  'functionHooks',
+  'refHooks',
 ]);
 
 const genericHooksComponentStrings = new Set([
   ...specializedHooksComponentStrings,
-  'hooks',
+  'naiveHooks',
 ]);
 
 const allComponentStrings = new Set(Object.keys(componentMap));
@@ -174,7 +175,7 @@ class App extends React.Component {
         specializedHooksComponentStrings.has(component) &&
         !e.currentTarget.checked
       ) {
-        this.setState({ component: 'hooks', ...clearedTimesState });
+        this.setState({ component: 'naiveHooks', ...clearedTimesState });
       } else {
         this.setState({ component, ...clearedTimesState });
       }
@@ -214,20 +215,20 @@ class App extends React.Component {
     return this.isComponent('functional');
   };
 
-  isHooksComponent = () => {
-    return this.isComponent('hooks');
+  isNaiveHooksComponent = () => {
+    return this.isComponent('naiveHooks');
   };
 
-  isHooksMemoComponent = () => {
-    return this.isComponent('hooksMemo');
+  isMemoHooksComponent = () => {
+    return this.isComponent('memoHooks');
   };
 
-  isHooksFunctionComponent = () => {
-    return this.isComponent('hooksFunction');
+  isFunctionHooksComponent = () => {
+    return this.isComponent('functionHooks');
   };
 
-  isHooksRefComponent = () => {
-    return this.isComponent('hooksRef');
+  isRefHooksComponent = () => {
+    return this.isComponent('refHooks');
   };
 
   isGenericHooksComponent = () => {
@@ -421,13 +422,13 @@ class App extends React.Component {
             <input
               id="radioInput--hooks"
               type="radio"
-              value="hooks"
+              value="naiveHooks"
               checked={this.isGenericHooksComponent()}
-              onChange={this.handleChangeComponent('hooks')}
+              onChange={this.handleChangeComponent('naiveHooks')}
               disabled={syntaxError}
             />
             <label htmlFor="radioInput--hooks">
-              {componentShortDescriptionMap.hooks}
+              {componentShortDescriptionMap.naiveHooks}
             </label>
           </div>
         </div>
@@ -436,23 +437,25 @@ class App extends React.Component {
             <div className="hooksComponentSelectContainer">
               <div
                 className={`${memoRadioContainerClass}${
-                  this.isHooksComponent() ? ' memoRadioContainer--checked' : ''
+                  this.isNaiveHooksComponent()
+                    ? ' memoRadioContainer--checked'
+                    : ''
                 }`}
                 id="memoRadioContainer--naive"
               >
                 <input
                   id="checkboxInput--naive"
                   type="radio"
-                  value="hooks"
-                  checked={this.isHooksComponent()}
-                  onChange={this.handleChangeComponent('hooks')}
+                  value="naiveHooks"
+                  checked={this.isNaiveHooksComponent()}
+                  onChange={this.handleChangeComponent('naiveHooks')}
                   disabled={!this.isGenericHooksComponent() || syntaxError}
                 />
                 <label htmlFor="checkboxInput--naive">Naive</label>
               </div>
               <div
                 className={`${memoRadioContainerClass}${
-                  this.isHooksMemoComponent()
+                  this.isMemoHooksComponent()
                     ? ' memoRadioContainer--checked'
                     : ''
                 }`}
@@ -461,18 +464,18 @@ class App extends React.Component {
                 <input
                   id="checkboxInput--memo"
                   type="radio"
-                  value="hooksMemo"
-                  checked={this.isHooksMemoComponent()}
-                  onChange={this.handleChangeComponent('hooksMemo')}
+                  value="memoHooks"
+                  checked={this.isMemoHooksComponent()}
+                  onChange={this.handleChangeComponent('memoHooks')}
                   disabled={!this.isGenericHooksComponent() || syntaxError}
                 />
                 <label htmlFor="checkboxInput--memo">
-                  {componentShortDescriptionMap.hooksMemo}
+                  {componentShortDescriptionMap.memoHooks}
                 </label>
               </div>
               <div
                 className={`${memoRadioContainerClass}${
-                  this.isHooksFunctionComponent()
+                  this.isFunctionHooksComponent()
                     ? ' memoRadioContainer--checked'
                     : ''
                 }`}
@@ -481,18 +484,18 @@ class App extends React.Component {
                 <input
                   id="checkboxInput--function"
                   type="radio"
-                  value="hooksFunction"
-                  checked={this.isHooksFunctionComponent()}
-                  onChange={this.handleChangeComponent('hooksFunction')}
+                  value="functionHooks"
+                  checked={this.isFunctionHooksComponent()}
+                  onChange={this.handleChangeComponent('functionHooks')}
                   disabled={!this.isGenericHooksComponent() || syntaxError}
                 />
                 <label htmlFor="checkboxInput--function">
-                  {componentShortDescriptionMap.hooksFunction}
+                  {componentShortDescriptionMap.functionHooks}
                 </label>
               </div>
               <div
                 className={`${memoRadioContainerClass}${
-                  this.isHooksRefComponent()
+                  this.isRefHooksComponent()
                     ? ' memoRadioContainer--checked'
                     : ''
                 }`}
@@ -501,13 +504,13 @@ class App extends React.Component {
                 <input
                   id="checkboxInput--ref"
                   type="radio"
-                  value="hooksRef"
-                  checked={this.isHooksRefComponent()}
-                  onChange={this.handleChangeComponent('hooksRef')}
+                  value="refHooks"
+                  checked={this.isRefHooksComponent()}
+                  onChange={this.handleChangeComponent('refHooks')}
                   disabled={!this.isGenericHooksComponent() || syntaxError}
                 />
                 <label htmlFor="checkboxInput--ref">
-                  {componentShortDescriptionMap.hooksRef}
+                  {componentShortDescriptionMap.refHooks}
                 </label>
               </div>
             </div>
@@ -624,6 +627,7 @@ class App extends React.Component {
 
   renderBenchmarkCode = () => {
     const { component } = this.state;
+    console.log({ component });
     return (
       Boolean(component) && (
         <React.Fragment>
