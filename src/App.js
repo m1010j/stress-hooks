@@ -162,25 +162,44 @@ class App extends React.Component {
     );
   };
 
-  renderErrors = () => {
-    const { syntaxError, runtimeError } = this.state;
+  renderSyntaxError = () => {
+    const { syntaxError } = this.state;
     return (
-      <React.Fragment>
-        {Boolean(syntaxError) && (
-          <p className="p--Error">Syntax error: {syntaxError}</p>
-        )}
-        {Boolean(runtimeError) && (
-          <p className="p--Error">Runtime error: {runtimeError}</p>
-        )}
-      </React.Fragment>
+      Boolean(syntaxError) && (
+        <p className="p--Error">Syntax error: {syntaxError}</p>
+      )
     );
   };
 
-  renderRunButton = () => {
-    const { component } = this.state;
-    if (!component) return null;
+  renderRuntimeError = () => {
+    const { runtimeError } = this.state;
     return (
-      <button onClick={this.handleRunBenchmark} className="runButton">
+      Boolean(runtimeError) && (
+        <p className="p--Error">Runtime error: {runtimeError}</p>
+      )
+    );
+  };
+
+  renderTotalRendersError = () => {
+    const { totalRenders } = this.state;
+    if (!totalRenders || totalRenders < 1) {
+      return (
+        <p className="p--Error">Total number of renders must be at least 0.</p>
+      );
+    }
+    return null;
+  };
+
+  renderRunButton = () => {
+    const { component, totalRenders, syntaxError } = this.state;
+    if (!component) return null;
+    const runButtonClassName = `runButton${
+      !totalRenders || totalRenders < 1 || syntaxError
+        ? ' runButton--disabled'
+        : ''
+    }`;
+    return (
+      <button onClick={this.handleRunBenchmark} className={runButtonClassName}>
         4. Run benchmark!
       </button>
     );
@@ -303,7 +322,7 @@ class App extends React.Component {
         </div>
         <form>
           {this.renderBenchmarkFunction()}
-          {this.renderErrors()}
+          {this.renderSyntaxError()}
           <ParametersSelect
             args={args}
             benchmark={benchmark}
@@ -313,12 +332,14 @@ class App extends React.Component {
             syntaxError={syntaxError}
             totalRenders={totalRenders}
           />
+          {this.renderRuntimeError()}
+          {this.renderTotalRendersError()}
           <ComponentSelect
             syntaxError={syntaxError}
             component={component}
             handleChangeComponent={this.handleChangeComponent}
           />
-          {!this.state.syntaxError && this.renderRunButton()}
+          {this.renderRunButton()}
         </form>
         {this.renderValidation()}
         {this.renderBenchmark()}

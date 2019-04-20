@@ -347,10 +347,14 @@ input[type='radio'] {
 .memoRadioContainer--disabled:hover,
 .radioContainer--disabled:focus,
 .memoRadioContainer--disabled:focus,
+.runButton--disabled,
+.runButton--disabled:hover,
+.runButton--disabled:focus,
 #totalRendersInput:disabled {
   background-color: #6c6c6c;
   color: #515151;
   cursor: not-allowed;
+  border: none;
 }
 
 .radioContainer--disabled label,
