@@ -4,19 +4,19 @@ self.__precacheManifest = [
     "url": "/stress-hooks/static/js/runtime~main.ccb4be0d.js"
   },
   {
-    "revision": "6fd30ccc99c388fdcb2c",
-    "url": "/stress-hooks/static/js/main.48112ed4.chunk.js"
+    "revision": "b42dbbba961fb3b4d85a",
+    "url": "/stress-hooks/static/js/main.25184545.chunk.js"
   },
   {
     "revision": "0ba9b9d63403ef015b15",
     "url": "/stress-hooks/static/js/2.7ace3535.chunk.js"
   },
   {
-    "revision": "6fd30ccc99c388fdcb2c",
+    "revision": "b42dbbba961fb3b4d85a",
     "url": "/stress-hooks/static/css/main.348687cf.chunk.css"
   },
   {
-    "revision": "1184a2d4b985c49bb99ecbe068db84b8",
+    "revision": "b62a619c119f8e13359e57043ed63f73",
     "url": "/stress-hooks/index.html"
   }
 ];
