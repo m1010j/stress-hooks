@@ -84,9 +84,13 @@ class App extends React.Component {
       /* eslint-disable no-eval */
       eval(`benchmark = ${this.state.benchmarkString}`);
       /* eslint-enable no-eval */
-      this.setState({ benchmark, syntaxError: null });
+      this.setState({ benchmark, syntaxError: null, runtimeError: null });
     } catch (error) {
-      this.setState({ syntaxError: error.message, benchmark: null });
+      this.setState({
+        syntaxError: error.message,
+        benchmark: null,
+        runtimeError: null,
+      });
     }
   };
 
